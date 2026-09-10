@@ -1,8 +1,4 @@
-"""
-Lab 1.
-
-Language detection
-"""
+# Lab 1. Language detection
 
 # pylint:disable=unused-argument
 from typing import Sequence
