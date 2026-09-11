@@ -11,17 +11,28 @@ ProfileType = tuple[str, FreqDictType, int]
 
 
 def tokenize(text: str) -> Sequence[str] | None:
-    """
-    Splits a text into tokens, converts the tokens into lowercase,
-    removes punctuation and other symbols from words
+    # Splits a text into tokens, converts the tokens into lowercase,
+    # removes punctuation and other symbols from words
 
-    Args:
-       text (str): Text
+    # Args:
+    #    text (str): Text
 
-    Returns:
-        Sequence[str] | None: Sequence of lower-cased tokens without punctuation.
-        Returns None if input text is not a string.
-    """
+    # Returns:
+    #     Sequence[str] | None: Sequence of lower-cased tokens without punctuation.
+    #     Returns None if input text is not a string.
+    if type(text) != str:
+        return None
+
+    wordlst = text.lower().split()
+    wordlst_cleaned = []
+    for word in wordlst:
+        word_cleaned = ''
+        for symbol in word:
+            if symbol.isalpha():
+                word_cleaned += symbol
+        if word_cleaned:
+            wordlst_cleaned.append(word_cleaned)
+    return wordlst_cleaned
 
 
 def remove_stop_words(tokens: Sequence[str], stop_words: Sequence[str]) -> Sequence[str] | None:
