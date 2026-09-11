@@ -20,7 +20,7 @@ def tokenize(text: str) -> Sequence[str] | None:
     # Returns:
     #     Sequence[str] | None: Sequence of lower-cased tokens without punctuation.
     #     Returns None if input text is not a string.
-    if type(text) != str:
+    if not isinstance(text, str):
         return None
 
     wordlst = text.lower().split()
@@ -36,16 +36,15 @@ def tokenize(text: str) -> Sequence[str] | None:
 
 
 def remove_stop_words(tokens: Sequence[str], stop_words: Sequence[str]) -> Sequence[str] | None:
-    """
-    Removes stop words
+    # Removes stop words
 
-    Args:
-        tokens (Sequence[str]): Sequence of tokens
-        stop_words (Sequence[str]): Sequence of stop words (can be empty)
-    Returns:
-        Sequence[str] | None: Sequence of tokens without stop words.
-        Returns None in case of incorrect input types.
-    """
+    # Args:
+    #     tokens (Sequence[str]): Sequence of tokens
+    #     stop_words (Sequence[str]): Sequence of stop words (can be empty)
+    # Returns:
+    #     Sequence[str] | None: Sequence of tokens without stop words.
+    #     Returns None in case of incorrect input types.
+
 
 
 def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
