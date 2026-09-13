@@ -46,22 +46,24 @@ def remove_stop_words(tokens: Sequence[str], stop_words: Sequence[str]) -> Seque
     #     Returns None in case of incorrect input types.
     if (not isinstance(tokens, Sequence)) or (not isinstance(stop_words, Sequence)):
         return None
-    
+
     cleaned_tokens = [word for word in tokens if word not in stop_words]
     return cleaned_tokens
 
 
 def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
-    """
-    Calculates frequencies of given tokens
+    # Calculates frequencies of given tokens
 
-    Args:
-        tokens (Sequence[str]): Sequence of tokens
-    Returns:
-        dict[str, float] | None: Dictionary with frequencies.
-        Returns None in case of incorrect input types.
-    """
+    # Args:
+    #     tokens (Sequence[str]): Sequence of tokens
+    # Returns:
+    #     dict[str, float] | None: Dictionary with frequencies.
+    #     Returns None in case of incorrect input types.
+    if not isinstance(tokens, Sequence):
+        return None
 
+    dict_freqs = {token: tokens.count(token) / len(tokens) for token in tokens}
+    return dict_freqs
 
 def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | None:
     """
