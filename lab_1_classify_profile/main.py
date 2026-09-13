@@ -66,17 +66,22 @@ def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
     return dict_freqs
 
 def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | None:
-    """
-    Finds the most common words
+    # Finds the most common words
 
-    Args:
-        freq_dict (dict[str, float]): Dictionary with frequencies
-        top_n (int): Number of the most common words
+    # Args:
+    #     freq_dict (dict[str, float]): Dictionary with frequencies
+    #     top_n (int): Number of the most common words
 
-    Returns:
-        Sequence[str] | None: Sequence of the most common words.
-        Returns None in case of incorrect input types or non-positive top_n.
-    """
+    # Returns:
+    #     Sequence[str] | None: Sequence of the most common words.
+    #     Returns None in case of incorrect input types or non-positive top_n.
+    if (not isinstance(freq_dict, dict)) or (top_n <= 0):
+        return None
+
+    alpha_freq_dict = dict(sorted(freq_dict.items()))
+    sorted_freq_dict = sorted(alpha_freq_dict.items(), key=lambda item: item[1], reverse=True)
+    top_n_words = [word_and_freq[0] for word_and_freq in sorted_freq_dict[:top_n]]
+    return top_n_words
 
 
 # Mark 6.
