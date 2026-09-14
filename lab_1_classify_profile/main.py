@@ -65,6 +65,7 @@ def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
     dict_freqs = {token: tokens.count(token) / len(tokens) for token in tokens}
     return dict_freqs
 
+
 def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | None:
     # Finds the most common words
 
