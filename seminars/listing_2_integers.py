@@ -1,3 +1,5 @@
+import math
+
 """
 Programming 2026.
 
@@ -58,9 +60,9 @@ def add_numbers(a: int, b: int) -> int:
     Returns:
         int: Sum of a and b
     """
-    # student implementation goes here
+    return a + b
 
-
+print(add_numbers(4, 7))
 # add_numbers(2, 3) → 5
 # add_numbers(-5, 10) → 5
 # add_numbers(0, 0) → 0
@@ -79,9 +81,9 @@ def average(a: float, b: float, c: float) -> float:
     Returns:
         float: Average value of the three numbers
     """
-    # student implementation goes here
+    return (a + b + c) / 3
 
-
+print(average(2, 15, 10))
 # average(1, 2, 3) → 2.0
 # average(10, 20, 30) → 20.0
 # average(5.5, 6.5, 7.5) → 6.5
@@ -98,9 +100,10 @@ def is_even(n: int) -> bool:
     Returns:
         bool: True if n is even, False otherwise
     """
-    # student implementation goes here
+    return True if n % 2 == 0 else False
 
-
+print(is_even(7))
+print(is_even(24))
 # is_even(2) → True
 # is_even(3) → False
 # is_even(0) → True
@@ -118,9 +121,9 @@ def area_of_circle(radius: float) -> float:
     Returns:
         float: Area of the circle
     """
-    # student implementation goes here
+    return math.pi * radius**2
 
-
+print(area_of_circle(3))
 # area_of_circle(1) → 3.14159...
 # area_of_circle(0) → 0
 # area_of_circle(2.5) → ~19.63495
@@ -137,9 +140,13 @@ def factorial(n: int) -> int:
     Returns:
         int: Factorial of n
     """
-    # student implementation goes here
+    fact = 1
+    while n > 0:
+        fact *= n
+        n -= 1
+    return fact
 
-
+print(factorial(0), factorial(1), factorial(5))
 # factorial(0) → 1
 # factorial(1) → 1
 # factorial(5) → 120
@@ -157,9 +164,9 @@ def power(a: float, b: int) -> float:
     Returns:
         float: Result of a raised to the power of b
     """
-    # student implementation goes here
+    return a**b
 
-
+print(power(2, 3), power(5, 0), power(2, -2))
 # power(2, 3) → 8
 # power(5, 0) → 1
 # power(2, -2) → 0.25
@@ -180,9 +187,9 @@ def distance(x1: float, y1: float, x2: float, y2: float) -> float:
     Returns:
         float: Euclidean distance between the two points
     """
-    # student implementation goes here
+    return math.sqrt((x2 - x1)**2 + (y1 - y2)**2)
 
-
+print(distance(-1, -1, 2, 3))
 # distance(0, 0, 3, 4) → 5.0
 # distance(1, 2, 1, 2) → 0.0
 # distance(-1, -1, 2, 3) → 5.0
@@ -199,9 +206,14 @@ def fibonacci(n: int) -> int:
     Returns:
         int: n-th Fibonacci number
     """
-    # student implementation goes here
+    fib_nums = [0, 1]
+    if n >= 2:
+        for i in range(n - 1):
+            add_fib_num = fib_nums[i] + fib_nums[i + 1]
+            fib_nums.append(add_fib_num)
+    return fib_nums[n]
 
-
+print(fibonacci(6), fibonacci(7), fibonacci(8), fibonacci(9), fibonacci(10))
 # fibonacci(0) → 0
 # fibonacci(1) → 1
 # fibonacci(5) → 5
@@ -219,9 +231,12 @@ def is_prime(n: int) -> bool:
     Returns:
         bool: True if n is prime, False otherwise
     """
-    # student implementation goes here
+    for i in range(2, n):
+        if n % i == 0:
+            return False
+    return True
 
-
+print(is_prime(2), is_prime(15), is_prime(17))
 # is_prime(2) → True
 # is_prime(15) → False
 # is_prime(17) → True
