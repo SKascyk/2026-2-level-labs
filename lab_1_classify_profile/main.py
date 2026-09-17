@@ -115,16 +115,17 @@ def create_language_profile(
 
 
 def check_profile(profile: ProfileType) -> bool:
-    """
-    Checks profile structure
+    # Checks profile structure
 
-    Args:
-        profile (ProfileType): Profile to check
+    # Args:
+    #     profile (ProfileType): Profile to check
 
-    Returns:
-        bool: Returns True if the profile has right structure and types,
-        otherwise returns False.
-    """
+    # Returns:
+    #     bool: Returns True if the profile has right structure and types,
+    #     otherwise returns False.
+    if isinstance(profile, ProfileType):
+        return True
+    return False
 
 
 def compare_profiles_by_top_n(
