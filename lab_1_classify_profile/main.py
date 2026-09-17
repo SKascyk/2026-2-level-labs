@@ -76,7 +76,7 @@ def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | 
     # Returns:
     #     Sequence[str] | None: Sequence of the most common words.
     #     Returns None in case of incorrect input types or non-positive top_n.
-    if not (isinstance(freq_dict, dict) and top_n > 0):
+    if not (isinstance(freq_dict, FreqDictType) and top_n > 0):
         return None
 
     alpha_freq_dict = dict(sorted(freq_dict.items()))
