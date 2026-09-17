@@ -140,7 +140,11 @@ def compare_profiles_by_top_n(
     # Returns:
     #     float | None: The distance between profiles.
     #     Returns None in case of incorrect input types.
-    if not (check_profile(unknown_profile) is True and check_profile(profile_to_compare) is True):
+    if not (
+        check_profile(unknown_profile) is True
+        and check_profile(profile_to_compare) is True
+        and top_n > 0
+    ):
         return None
 
     unk_top_n = set(get_top_n_words(unknown_profile[1], top_n))
