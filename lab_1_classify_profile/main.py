@@ -131,17 +131,22 @@ def check_profile(profile: ProfileType) -> bool:
 def compare_profiles_by_top_n(
     unknown_profile: ProfileType, profile_to_compare: ProfileType, top_n: int
 ) -> float | None:
-    """
-    Compares profiles and calculates the distance using top n words
+    # Compares profiles and calculates the distance using top n words
 
-    Args:
-        unknown_profile (ProfileType): Unknown profile
-        profile_to_compare (ProfileType): Profile of a known language
-        top_n (int): Number of the most common words
-    Returns:
-        float | None: The distance between profiles.
-        Returns None in case of incorrect input types.
-    """
+    # Args:
+    #     unknown_profile (ProfileType): Unknown profile
+    #     profile_to_compare (ProfileType): Profile of a known language
+    #     top_n (int): Number of the most common words
+    # Returns:
+    #     float | None: The distance between profiles.
+    #     Returns None in case of incorrect input types.
+    if not (check_profile(unknown_profile) is True and check_profile(profile_to_compare) is True):
+        return None
+
+    unk_top_n = set(get_top_n_words(unknown_profile[1], top_n))
+    com_top_n = set(get_top_n_words(profile_to_compare[1], top_n))
+    distance = len(unk_top_n.intersection(com_top_n)) / len(unk_top_n)
+    return distance
 
 
 def detect_language_by_top_n(
