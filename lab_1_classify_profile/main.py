@@ -91,18 +91,27 @@ def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | 
 def create_language_profile(
     language: str, text: str, stop_words: Sequence[str]
 ) -> ProfileType | None:
-    """
-    Creates a language profile
+    # Creates a language profile
 
-    Args:
-        language (str): Language name
-        text (str): Text
-        stop_words (Sequence[str]): Sequence of stop words (can be empty)
+    # Args:
+    #     language (str): Language name
+    #     text (str): Text
+    #     stop_words (Sequence[str]): Sequence of stop words (can be empty)
 
-    Returns:
-        ProfileType | None: Language profile.
-        Returns None in case of incorrect input types.
-    """
+    # Returns:
+    #     ProfileType | None: Language profile.
+    #     Returns None in case of incorrect input types.
+    if not (isinstance(language, str) and isinstance(text, str) and isinstance(stop_words, Sequence)):
+        return None
+
+    tokens = tokenize(text)
+    cleaned_tokens = remove_stop_words(tokens, stop_words)
+    dict_freqs = calculate_frequencies(cleaned_tokens)
+    n_words = 0
+    for token in cleaned_tokens:
+        if cleaned_tokens.count(token) == 1:
+            n_words += 1
+    return (language, dict_freqs, n_words)
 
 
 def check_profile(profile: ProfileType) -> bool:
