@@ -152,19 +152,34 @@ def compare_profiles_by_top_n(
 def detect_language_by_top_n(
     unknown_profile: ProfileType, profile_1: ProfileType, profile_2: ProfileType, top_n: int
 ) -> str | None:
-    """
-    Detects the language of an unknown profile
+    # Detects the language of an unknown profile
 
-    Args:
-        unknown_profile (ProfileType): Unknown profile
-        profile_1 (ProfileType): Profile for comparison
-        profile_2 (ProfileType): Another profile for comparison
-        top_n (int): Number of the most common words
+    # Args:
+    #     unknown_profile (ProfileType): Unknown profile
+    #     profile_1 (ProfileType): Profile for comparison
+    #     profile_2 (ProfileType): Another profile for comparison
+    #     top_n (int): Number of the most common words
 
-    Returns:
-        str | None: Unknown profile language.
-        Returns None in case of incorrect input types.
-    """
+    # Returns:
+    #     str | None: Unknown profile language.
+    #     Returns None in case of incorrect input types.
+    if not (
+        check_profile(unknown_profile) is True
+        and check_profile(profile_1) is True
+        and check_profile(profile_2) is True
+        and top_n > 0
+    ):
+        return None
+
+    distance_1 = compare_profiles_by_top_n(unknown_profile, profile_1, top_n)
+    distance_2 = compare_profiles_by_top_n(unknown_profile, profile_2, top_n)
+    if distance_1 > distance_2:
+        return profile_1[0]
+    elif distance_1 < distance_2:
+        return profile_2[0]
+    else:
+        lang_names = sorted([profile_1[0], profile_2[0]])
+        return lang_names[0]
 
 
 # Mark 8
