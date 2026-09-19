@@ -1,4 +1,8 @@
-# Lab 1. Language detection
+"""
+Lab 1.
+
+Language detection
+"""
 
 # pylint:disable=unused-argument
 from typing import Sequence
@@ -11,15 +15,17 @@ ProfileType = tuple[str, FreqDictType, int]
 
 
 def tokenize(text: str) -> Sequence[str] | None:
-    # Splits a text into tokens, converts the tokens into lowercase,
-    # removes punctuation and other symbols from words
+    """
+    Splits a text into tokens, converts the tokens into lowercase,
+    removes punctuation and other symbols from words
 
-    # Args:
-    #    text (str): Text
+    Args:
+       text (str): Text
 
-    # Returns:
-    #     Sequence[str] | None: Sequence of lower-cased tokens without punctuation.
-    #     Returns None if input text is not a string.
+    Returns:
+        Sequence[str] | None: Sequence of lower-cased tokens without punctuation.
+        Returns None if input text is not a string.
+    """
     if not isinstance(text, str):
         return None
 
@@ -36,14 +42,16 @@ def tokenize(text: str) -> Sequence[str] | None:
 
 
 def remove_stop_words(tokens: Sequence[str], stop_words: Sequence[str]) -> Sequence[str] | None:
-    # Removes stop words
+    """
+    Removes stop words
 
-    # Args:
-    #     tokens (Sequence[str]): Sequence of tokens
-    #     stop_words (Sequence[str]): Sequence of stop words (can be empty)
-    # Returns:
-    #     Sequence[str] | None: Sequence of tokens without stop words.
-    #     Returns None in case of incorrect input types.
+    Args:
+        tokens (Sequence[str]): Sequence of tokens
+        stop_words (Sequence[str]): Sequence of stop words (can be empty)
+    Returns:
+        Sequence[str] | None: Sequence of tokens without stop words.
+        Returns None in case of incorrect input types.
+    """
     if not (isinstance(tokens, Sequence) and isinstance(stop_words, Sequence)):
         return None
 
@@ -52,13 +60,15 @@ def remove_stop_words(tokens: Sequence[str], stop_words: Sequence[str]) -> Seque
 
 
 def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
-    # Calculates frequencies of given tokens
+    """
+    Calculates frequencies of given tokens
 
-    # Args:
-    #     tokens (Sequence[str]): Sequence of tokens
-    # Returns:
-    #     dict[str, float] | None: Dictionary with frequencies.
-    #     Returns None in case of incorrect input types.
+    Args:
+        tokens (Sequence[str]): Sequence of tokens
+    Returns:
+        dict[str, float] | None: Dictionary with frequencies.
+        Returns None in case of incorrect input types.
+    """
     if not isinstance(tokens, Sequence):
         return None
 
@@ -67,15 +77,17 @@ def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
 
 
 def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | None:
-    # Finds the most common words
+    """
+    Finds the most common words
 
-    # Args:
-    #     freq_dict (dict[str, float]): Dictionary with frequencies
-    #     top_n (int): Number of the most common words
+    Args:
+        freq_dict (dict[str, float]): Dictionary with frequencies
+        top_n (int): Number of the most common words
 
-    # Returns:
-    #     Sequence[str] | None: Sequence of the most common words.
-    #     Returns None in case of incorrect input types or non-positive top_n.
+    Returns:
+        Sequence[str] | None: Sequence of the most common words.
+        Returns None in case of incorrect input types or non-positive top_n.
+    """
     if not (isinstance(freq_dict, FreqDictType) and top_n > 0):
         return None
 
@@ -91,16 +103,18 @@ def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | 
 def create_language_profile(
     language: str, text: str, stop_words: Sequence[str]
 ) -> ProfileType | None:
-    # Creates a language profile
+    """
+    Creates a language profile
 
-    # Args:
-    #     language (str): Language name
-    #     text (str): Text
-    #     stop_words (Sequence[str]): Sequence of stop words (can be empty)
+    Args:
+        language (str): Language name
+        text (str): Text
+        stop_words (Sequence[str]): Sequence of stop words (can be empty)
 
-    # Returns:
-    #     ProfileType | None: Language profile.
-    #     Returns None in case of incorrect input types.
+    Returns:
+        ProfileType | None: Language profile.
+        Returns None in case of incorrect input types.
+    """
     if not (isinstance(language, str) and isinstance(text, str) and isinstance(stop_words, Sequence)):
         return None
 
@@ -115,14 +129,16 @@ def create_language_profile(
 
 
 def check_profile(profile: ProfileType) -> bool:
-    # Checks profile structure
+    """
+    Checks profile structure
 
-    # Args:
-    #     profile (ProfileType): Profile to check
+    Args:
+        profile (ProfileType): Profile to check
 
-    # Returns:
-    #     bool: Returns True if the profile has right structure and types,
-    #     otherwise returns False.
+    Returns:
+        bool: Returns True if the profile has right structure and types,
+        otherwise returns False.
+    """
     if isinstance(profile, ProfileType):
         return True
     return False
@@ -131,15 +147,17 @@ def check_profile(profile: ProfileType) -> bool:
 def compare_profiles_by_top_n(
     unknown_profile: ProfileType, profile_to_compare: ProfileType, top_n: int
 ) -> float | None:
-    # Compares profiles and calculates the distance using top n words
+    """
+    Compares profiles and calculates the distance using top n words
 
-    # Args:
-    #     unknown_profile (ProfileType): Unknown profile
-    #     profile_to_compare (ProfileType): Profile of a known language
-    #     top_n (int): Number of the most common words
-    # Returns:
-    #     float | None: The distance between profiles.
-    #     Returns None in case of incorrect input types.
+    Args:
+        unknown_profile (ProfileType): Unknown profile
+        profile_to_compare (ProfileType): Profile of a known language
+        top_n (int): Number of the most common words
+    Returns:
+        float | None: The distance between profiles.
+        Returns None in case of incorrect input types.
+    """
     if not (
         check_profile(unknown_profile) is True
         and check_profile(profile_to_compare) is True
@@ -156,17 +174,19 @@ def compare_profiles_by_top_n(
 def detect_language_by_top_n(
     unknown_profile: ProfileType, profile_1: ProfileType, profile_2: ProfileType, top_n: int
 ) -> str | None:
-    # Detects the language of an unknown profile
+    """
+    Detects the language of an unknown profile
 
-    # Args:
-    #     unknown_profile (ProfileType): Unknown profile
-    #     profile_1 (ProfileType): Profile for comparison
-    #     profile_2 (ProfileType): Another profile for comparison
-    #     top_n (int): Number of the most common words
+    Args:
+        unknown_profile (ProfileType): Unknown profile
+        profile_1 (ProfileType): Profile for comparison
+        profile_2 (ProfileType): Another profile for comparison
+        top_n (int): Number of the most common words
 
-    # Returns:
-    #     str | None: Unknown profile language.
-    #     Returns None in case of incorrect input types.
+    Returns:
+        str | None: Unknown profile language.
+        Returns None in case of incorrect input types.
+    """
     if not (
         check_profile(unknown_profile) is True
         and check_profile(profile_1) is True
