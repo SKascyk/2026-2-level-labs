@@ -3,6 +3,7 @@ Language detection starter.
 """
 
 # pylint: disable=unused-variable, duplicate-code
+import main
 
 
 def main() -> None:
