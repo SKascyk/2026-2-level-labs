@@ -167,8 +167,7 @@ def compare_profiles_by_top_n(
 
     unk_top_n = set(get_top_n_words(unknown_profile[1], top_n))
     com_top_n = set(get_top_n_words(profile_to_compare[1], top_n))
-    distance = len(unk_top_n.intersection(com_top_n)) / len(unk_top_n)
-    return distance
+    return len(unk_top_n.intersection(com_top_n)) / len(unk_top_n)
 
 
 def detect_language_by_top_n(
