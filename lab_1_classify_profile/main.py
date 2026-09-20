@@ -55,8 +55,8 @@ def remove_stop_words(tokens: Sequence[str], stop_words: Sequence[str]) -> Seque
     if not (
         isinstance(tokens, Sequence)
         and isinstance(stop_words, Sequence)
-        and all([True if isinstance(token, str) else False for token in tokens])
-        and all([True if isinstance(word, str) else False for word in stop_words])
+        and all([isinstance(token, str) for token in tokens])
+        and all([isinstance(word, str) for word in stop_words])
     ):
         return None
 
@@ -76,7 +76,7 @@ def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
     """
     if not (
         isinstance(tokens, Sequence)
-        and all([True if isinstance(token, str) else False for token in tokens])
+        and all([isinstance(token, str) for token in tokens])
     ):
         return None
 
@@ -98,8 +98,8 @@ def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | 
     """
     if not (
         isinstance(freq_dict, dict)
-        and all([True if isinstance(key, str) else False for key in freq_dict])
-        and all([True if isinstance(value, float) else False for value in freq_dict.values()])
+        and all([isinstance(key, str) for key in freq_dict])
+        and all([isinstance(value, float) for value in freq_dict.values()])
         and top_n > 0
     ):
         return None
