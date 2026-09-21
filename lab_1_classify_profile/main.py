@@ -60,8 +60,7 @@ def remove_stop_words(tokens: Sequence[str], stop_words: Sequence[str]) -> Seque
     ):
         return None
 
-    cleaned_tokens = [word for word in tokens if word not in stop_words]
-    return cleaned_tokens
+    return [word for word in tokens if word not in stop_words]
 
 
 def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
@@ -80,8 +79,7 @@ def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
     ):
         return None
 
-    dict_freqs = {token: tokens.count(token) / len(tokens) for token in tokens}
-    return dict_freqs
+    return {token: tokens.count(token) / len(tokens) for token in tokens}
 
 
 def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | None:
