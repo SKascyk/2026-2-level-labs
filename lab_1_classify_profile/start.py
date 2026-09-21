@@ -18,10 +18,10 @@ def main() -> None:
         stopwords = file.read().split("\n")
     with open("lab_1_classify_profile/assets/texts/en.txt", "r", encoding="utf-8") as file:
         en_text = file.read()
-    tokens = lab_1_classify_profile.main.tokenize(de_text)
-    cleaned_tokens = lab_1_classify_profile.main.remove_stop_words(tokens, stopwords)
-    dict_freqs = lab_1_classify_profile.main.calculate_frequencies(cleaned_tokens)
-    result = lab_1_classify_profile.main.get_top_n_words(dict_freqs, 7)
+    de_profile = lab_1_classify_profile.main.create_language_profile('de', de_text, stopwords)
+    en_profile = lab_1_classify_profile.main.create_language_profile('en', en_text, stopwords)
+    unk_profile = lab_1_classify_profile.main.create_language_profile('unknown', unknown_text, stopwords)
+    result = lab_1_classify_profile.main.detect_language_by_top_n(unk_profile, de_profile, en_profile, 15)
     assert result, "Detection result is None"
     print(result)
 
