@@ -218,15 +218,13 @@ def detect_language_by_top_n(
     ):
         return None
 
-    distance_1 = compare_profiles_by_top_n(unknown_profile, profile_1, top_n)
-    distance_2 = compare_profiles_by_top_n(unknown_profile, profile_2, top_n)
-    if distance_1 > distance_2:
+    dist_1 = compare_profiles_by_top_n(unknown_profile, profile_1, top_n)
+    dist_2 = compare_profiles_by_top_n(unknown_profile, profile_2, top_n)
+    if dist_1 > dist_2:
         return profile_1[0]
-    elif distance_1 < distance_2:
+    if dist_1 < dist_2:
         return profile_2[0]
-    else:
-        lang_names = sorted([profile_1[0], profile_2[0]])
-        return lang_names[0]
+    return sorted([profile_1[0], profile_2[0]])[0]
 
 
 # Mark 8
