@@ -237,6 +237,20 @@ def calculate_mse(predicted: Sequence[float], actual: Sequence[float]) -> float 
         Returns None in case of incorrect input types or mismatched length.
         In case of empty inputs, returns 0.0.
     """
+    if not (
+        isinstance(predicted, Sequence)
+        and isinstance(actual, Sequence)
+        and all([isinstance(el, float) for el in predicted])
+        and all([isinstance(el, float) for el in actual])
+        and len(predicted) == len(actual)
+    ):
+        return None
+
+    if len(predicted) == 0 or len(actual) == 0:
+        return 0.0
+
+    differences = [(actual[i] - predicted[i])**2 for i in range(len(actual))]
+    return sum(differences) / len(actual)
 
 
 def compare_profiles_by_mse(
@@ -254,6 +268,26 @@ def compare_profiles_by_mse(
         float | None: The distance between the profiles.
         In case of corrupt input arguments or invalid profile structure, None is returned.
     """
+    if not (
+        check_profile(unknown_profile) is True
+        and check_profile(profile_to_compare) is True
+    ):
+        return None
+
+    tokens = list(set(unknown_profile[1]).union(set(profile_to_compare[1])))
+    unk_freqs = [
+        unknown_profile[1].get(token)
+        if token in unknown_profile[1]
+        else 0.0
+        for token in tokens
+    ]
+    com_freqs = [
+        profile_to_compare[1].get(token)
+        if token in profile_to_compare[1]
+        else 0.0
+        for token in tokens
+    ]
+    return calculate_mse(com_freqs, unk_freqs)
 
 
 def detect_language_by_mse(
@@ -272,6 +306,20 @@ def detect_language_by_mse(
         str | None: Unknown profile language.
         Returns None in case of incorrect input types.
     """
+    if not (
+        check_profile(unknown_profile) is True
+        and check_profile(profile_1) is True
+        and check_profile(profile_2) is True
+    ):
+        return None
+
+    mse_1 = compare_profiles_by_mse(unknown_profile, profile_1)
+    mse_2 = compare_profiles_by_mse(unknown_profile, profile_2)
+    if mse_1 > mse_2:
+        return profile_2[0]
+    if mse_1 < mse_2:
+        return profile_1[0]
+    return sorted([profile_1[0], profile_2[0]])[0]
 
 
 # Mark 10
