@@ -135,8 +135,8 @@ def create_language_profile(
     tokens = tokenize(text)
     cleaned_tokens = remove_stop_words(tokens, stop_words)
     dict_freqs = calculate_frequencies(cleaned_tokens)
-    n_words = len(set(cleaned_tokens))
-    return language, dict_freqs, n_words
+    unique_words = len(set(cleaned_tokens))
+    return language, dict_freqs, unique_words
 
 
 def check_profile(profile: ProfileType) -> bool:
