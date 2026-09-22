@@ -135,10 +135,7 @@ def create_language_profile(
     tokens = tokenize(text)
     cleaned_tokens = remove_stop_words(tokens, stop_words)
     dict_freqs = calculate_frequencies(cleaned_tokens)
-    n_words = 0
-    for token in cleaned_tokens:
-        if cleaned_tokens.count(token) == 1:
-            n_words += 1
+    n_words = len(set(cleaned_tokens))
     return language, dict_freqs, n_words
 
 
