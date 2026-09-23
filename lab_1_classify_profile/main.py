@@ -137,7 +137,6 @@ def create_language_profile(
     cleaned_tokens = remove_stop_words(tokens, stop_words) if tokens is not None else None
     dict_freqs = calculate_frequencies(cleaned_tokens) if cleaned_tokens is not None else None
     unique_words = len(set(cleaned_tokens)) if cleaned_tokens is not None else None
-
     if not(dict_freqs is None or unique_words is None):
         return language, dict_freqs, unique_words
     return None
@@ -191,7 +190,6 @@ def compare_profiles_by_top_n(
 
     unk_top_n = get_top_n_words(unknown_profile[1], top_n)
     com_top_n = get_top_n_words(profile_to_compare[1], top_n)
-
     if not(unk_top_n is None or com_top_n is None):
         return len(set(unk_top_n).intersection(set(com_top_n))) / len(unk_top_n)
     return None
@@ -224,7 +222,6 @@ def detect_language_by_top_n(
 
     dist_1 = compare_profiles_by_top_n(unknown_profile, profile_1, top_n)
     dist_2 = compare_profiles_by_top_n(unknown_profile, profile_2, top_n)
-
     if not (isinstance(dist_1, float) and isinstance(dist_2, float)):
         return None
 
@@ -301,7 +298,6 @@ def compare_profiles_by_mse(
         else 0.0
         for token in tokens
     ]
-
     return calculate_mse(com_freqs, unk_freqs)
 
 
@@ -330,7 +326,6 @@ def detect_language_by_mse(
 
     mse_1 = compare_profiles_by_mse(unknown_profile, profile_1)
     mse_2 = compare_profiles_by_mse(unknown_profile, profile_2)
-
     if not (isinstance(mse_1, float) and isinstance(mse_2, float)):
             return None
 
