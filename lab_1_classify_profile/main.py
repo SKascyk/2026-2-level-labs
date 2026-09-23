@@ -289,19 +289,30 @@ def compare_profiles_by_mse(
         return None
 
     tokens = list(set(unknown_profile[1]).union(set(profile_to_compare[1])))
-    unk_freqs = [
+    unk_freqs = (
+        [
         unknown_profile[1].get(token)
         if token in unknown_profile[1]
         else 0.0
         for token in tokens
-    ]
-    com_freqs = [
+        ]
+        if tokens is not None
+        else None
+    )
+    com_freqs = (
+        [
         profile_to_compare[1].get(token)
         if token in profile_to_compare[1]
         else 0.0
         for token in tokens
-    ]
-    return calculate_mse(com_freqs, unk_freqs)
+        ]
+        if tokens is not None
+        else None
+    )
+
+    if not(unk_freqs is None or com_freqs is None):
+        return calculate_mse(com_freqs, unk_freqs)
+    return None
 
 
 def detect_language_by_mse(
@@ -329,6 +340,10 @@ def detect_language_by_mse(
 
     mse_1 = compare_profiles_by_mse(unknown_profile, profile_1)
     mse_2 = compare_profiles_by_mse(unknown_profile, profile_2)
+
+    if not (isinstance(mse_1, float) and isinstance(mse_2, float)):
+            return None
+
     if mse_1 > mse_2:
         return profile_2[0]
     if mse_1 < mse_2:
