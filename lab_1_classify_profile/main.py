@@ -310,8 +310,11 @@ def compare_profiles_by_mse(
         else None
     )
 
-    if not(
-        (unk_freqs is None or com_freqs is None)
+    if (
+        not(
+            unk_freqs is None
+            or com_freqs is None
+        )
         and all([isinstance(el, float) for el in unk_freqs])
         and all([isinstance(el, float) for el in com_freqs])
     ):
