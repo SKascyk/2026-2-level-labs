@@ -21,7 +21,15 @@ def main() -> None:
     de_profile = create_language_profile('de', de_text, stopwords)
     en_profile = create_language_profile('en', en_text, stopwords)
     unk_profile = create_language_profile('unknown', unknown_text, stopwords)
-    result = detect_language_by_mse(unk_profile, de_profile, en_profile)
+    result = (
+        detect_language_by_mse(unk_profile, de_profile, en_profile)
+        if not(
+            unk_profile is None
+            or de_profile is None
+            or en_profile is None
+        )
+        else None
+    )
     assert result, "Detection result is None"
     print(result)
 
