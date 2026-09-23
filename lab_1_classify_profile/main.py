@@ -302,14 +302,7 @@ def compare_profiles_by_mse(
         for token in tokens
     ]
 
-    if (
-        isinstance(unk_freqs, Sequence)
-        and isinstance(com_freqs, Sequence)
-        and all([isinstance(el, float) for el in unk_freqs])
-        and all([isinstance(el, float) for el in com_freqs])
-    ):
-        return calculate_mse(com_freqs, unk_freqs)
-    return None
+    return calculate_mse(com_freqs, unk_freqs)
 
 
 def detect_language_by_mse(
