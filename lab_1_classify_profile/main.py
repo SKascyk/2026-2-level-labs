@@ -134,10 +134,13 @@ def create_language_profile(
         return None
 
     tokens = tokenize(text)
-    cleaned_tokens = remove_stop_words(tokens, stop_words)
-    dict_freqs = calculate_frequencies(cleaned_tokens)
-    unique_words = len(set(cleaned_tokens))
-    return language, dict_freqs, unique_words
+    cleaned_tokens = remove_stop_words(tokens, stop_words) if tokens is not None else None
+    dict_freqs = calculate_frequencies(cleaned_tokens) if cleaned_tokens is not None else None
+    unique_words = len(set(cleaned_tokens)) if dict_freqs is not None else None
+
+    if not(dict_freqs is None or unique_words is None):
+        return language, dict_freqs, unique_words
+    return None
 
 
 def check_profile(profile: ProfileType) -> bool:
@@ -186,9 +189,12 @@ def compare_profiles_by_top_n(
     ):
         return None
 
-    unk_top_n = set(get_top_n_words(unknown_profile[1], top_n))
-    com_top_n = set(get_top_n_words(profile_to_compare[1], top_n))
-    return len(unk_top_n.intersection(com_top_n)) / len(unk_top_n)
+    unk_top_n = get_top_n_words(unknown_profile[1], top_n)
+    com_top_n = get_top_n_words(profile_to_compare[1], top_n)
+
+    if not(unk_top_n is None or com_top_n is None):
+        return len(set(unk_top_n).intersection(set(com_top_n))) / len(unk_top_n)
+    return None
 
 
 def detect_language_by_top_n(
@@ -218,6 +224,10 @@ def detect_language_by_top_n(
 
     dist_1 = compare_profiles_by_top_n(unknown_profile, profile_1, top_n)
     dist_2 = compare_profiles_by_top_n(unknown_profile, profile_2, top_n)
+
+    if not (isinstance(dist_1, float) and isinstance(dist_2, float)):
+        return None
+
     if dist_1 > dist_2:
         return profile_1[0]
     if dist_1 < dist_2:
