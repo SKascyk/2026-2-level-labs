@@ -289,26 +289,18 @@ def compare_profiles_by_mse(
         return None
 
     tokens = list(set(unknown_profile[1]).union(set(profile_to_compare[1])))
-    unk_freqs = (
-        [
+    unk_freqs = [
         unknown_profile[1].get(token)
         if token in unknown_profile[1]
         else 0.0
         for token in tokens
-        ]
-        if tokens is not None
-        else None
-    )
-    com_freqs = (
-        [
+    ]
+    com_freqs = [
         profile_to_compare[1].get(token)
         if token in profile_to_compare[1]
         else 0.0
         for token in tokens
-        ]
-        if tokens is not None
-        else None
-    )
+    ]
 
     if (
         isinstance(unk_freqs, Sequence)
