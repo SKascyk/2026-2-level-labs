@@ -98,6 +98,7 @@ def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | 
         isinstance(freq_dict, dict)
         and all([isinstance(key, str) for key in freq_dict])
         and all([isinstance(value, float) for value in freq_dict.values()])
+        and isinstance(top_n, int)
         and top_n > 0
     ):
         return None
@@ -152,6 +153,7 @@ def check_profile(profile: ProfileType) -> bool:
     """
     if (
         isinstance(profile, tuple)
+        and len(profile) == 3
         and isinstance(profile[0], str)
         and isinstance(profile[1], dict)
         and all([isinstance(key, str) for key in profile[1]])
@@ -179,6 +181,7 @@ def compare_profiles_by_top_n(
     if not (
         check_profile(unknown_profile) is True
         and check_profile(profile_to_compare) is True
+        and isinstance(top_n, int)
         and top_n > 0
     ):
         return None
@@ -208,6 +211,7 @@ def detect_language_by_top_n(
         check_profile(unknown_profile) is True
         and check_profile(profile_1) is True
         and check_profile(profile_2) is True
+        and isinstance(top_n, int)
         and top_n > 0
     ):
         return None
