@@ -55,8 +55,8 @@ def remove_stop_words(tokens: Sequence[str], stop_words: Sequence[str]) -> Seque
     if not (
         isinstance(tokens, Sequence)
         and isinstance(stop_words, Sequence)
-        and all([isinstance(token, str) for token in tokens])
-        and all([isinstance(word, str) for word in stop_words])
+        and all((isinstance(token, str) for token in tokens))
+        and all((isinstance(word, str) for word in stop_words))
     ):
         return None
 
@@ -75,7 +75,7 @@ def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
     """
     if not (
         isinstance(tokens, Sequence)
-        and all([isinstance(token, str) for token in tokens])
+        and all((isinstance(token, str) for token in tokens))
     ):
         return None
 
@@ -96,8 +96,8 @@ def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | 
     """
     if not (
         isinstance(freq_dict, dict)
-        and all([isinstance(key, str) for key in freq_dict])
-        and all([isinstance(value, float) for value in freq_dict.values()])
+        and all((isinstance(key, str) for key in freq_dict))
+        and all((isinstance(value, float) for value in freq_dict.values()))
         and isinstance(top_n, int)
         and top_n > 0
     ):
@@ -129,7 +129,7 @@ def create_language_profile(
         isinstance(language, str)
         and isinstance(text, str)
         and isinstance(stop_words, Sequence)
-        and all([isinstance(word, str) for word in stop_words])
+        and all((isinstance(word, str) for word in stop_words))
     ):
         return None
 
@@ -158,8 +158,8 @@ def check_profile(profile: ProfileType) -> bool:
         and len(profile) == 3
         and isinstance(profile[0], str)
         and isinstance(profile[1], dict)
-        and all([isinstance(key, str) for key in profile[1]])
-        and all([isinstance(value, float) for value in profile[1].values()])
+        and all((isinstance(key, str) for key in profile[1]))
+        and all((isinstance(value, float) for value in profile[1].values()))
         and isinstance(profile[2], int)
     ):
         return True
@@ -251,8 +251,8 @@ def calculate_mse(predicted: Sequence[float], actual: Sequence[float]) -> float 
     if not (
         isinstance(predicted, Sequence)
         and isinstance(actual, Sequence)
-        and all([isinstance(el, float) for el in predicted])
-        and all([isinstance(el, float) for el in actual])
+        and all((isinstance(el, float) for el in predicted))
+        and all((isinstance(el, float) for el in actual))
         and len(predicted) == len(actual)
     ):
         return None
