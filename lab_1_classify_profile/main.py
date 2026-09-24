@@ -6,7 +6,7 @@ Language detection
 
 # pylint:disable=unused-argument
 from typing import Sequence
-import json
+from json import dumps, loads
 
 FreqDictType = dict[str, float]
 "Frequency dictionary. Contains pairs of token and its frequency."
@@ -357,7 +357,7 @@ def save_profile(profile: ProfileType, save_path: str) -> bool:
 
     profile_to_dict = {"name": profile[0], "freq": profile[1], "n_words": profile[2]}
     with open(f"{save_path}/{profile[0]}.json", "w", encoding="utf-8") as file:
-        file.write(json.dumps(profile_to_dict, indent=4, ensure_ascii=False))
+        file.write(dumps(profile_to_dict, indent=4, ensure_ascii=False))
     return True
 
 
@@ -376,7 +376,7 @@ def load_profile(path_to_file: str) -> ProfileType | None:
         return None
 
     with open(path_to_file, "r", encoding="utf-8") as file:
-        dict_profile = json.loads(file.read())
+        dict_profile = loads(file.read())
     profile = tuple(dict_profile.values()) if dict_profile is not None else None
     if check_profile(profile):
         return profile
