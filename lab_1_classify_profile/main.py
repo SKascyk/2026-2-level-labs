@@ -6,6 +6,7 @@ Language detection
 
 # pylint:disable=unused-argument
 from typing import Sequence
+import json
 
 FreqDictType = dict[str, float]
 "Frequency dictionary. Contains pairs of token and its frequency."
@@ -32,7 +33,7 @@ def tokenize(text: str) -> Sequence[str] | None:
     wordlst = text.lower().split()
     wordlst_cleaned = []
     for word in wordlst:
-        word_cleaned = ''
+        word_cleaned = ""
         for symbol in word:
             if symbol.isalpha():
                 word_cleaned += symbol
@@ -351,6 +352,13 @@ def save_profile(profile: ProfileType, save_path: str) -> bool:
         bool: False in case of incorrect input types or if the profile
         is missing obligatory keys. True if the profile is saved.
     """
+    if not(check_profile(profile) is True and isinstance(save_path, str)):
+        return False
+
+    profile_to_dict = {"name": profile[0], "freq": profile[1], "n_words": profile[2]}
+    with open(f"{save_path}/{profile[0]}.json", "w", encoding="utf-8") as file:
+        file.write(json.dumps(profile_to_dict, indent=4, ensure_ascii=False))
+    return True
 
 
 def load_profile(path_to_file: str) -> ProfileType | None:
@@ -364,6 +372,15 @@ def load_profile(path_to_file: str) -> ProfileType | None:
         ProfileType | None: Loaded profile.
         Returns None in case of incorrect input types.
     """
+    if not isinstance(path_to_file, str):
+        return None
+
+    with open(path_to_file, "r", encoding="utf-8") as file:
+        dict_profile = json.loads(file.read())
+    profile = tuple(dict_profile.values()) if dict_profile is not None else None
+    if check_profile(profile):
+        return profile
+    return None
 
 
 def collect_profiles(paths_to_profiles: Sequence[str]) -> Sequence[ProfileType] | None:
@@ -377,6 +394,20 @@ def collect_profiles(paths_to_profiles: Sequence[str]) -> Sequence[ProfileType] 
         Sequence[ProfileType] | None: Sequence of loaded profiles.
         Returns None in case of incorrect input types.
     """
+    if not(
+        isinstance(paths_to_profiles, Sequence)
+        and all((isinstance(path, str) for path in paths_to_profiles))
+    ):
+        return None
+
+    profiles = [
+        load_profile(path)
+        for path in paths_to_profiles
+        if load_profile(path) is not None
+    ]
+    if all((check_profile(profile) for profile in profiles)):
+        return profiles
+    return None
 
 
 def detect_language_advanced(
