@@ -328,7 +328,7 @@ def detect_language_by_mse(
     mse_1 = compare_profiles_by_mse(unknown_profile, profile_1)
     mse_2 = compare_profiles_by_mse(unknown_profile, profile_2)
     if not (isinstance(mse_1, float) and isinstance(mse_2, float)):
-            return None
+        return None
 
     if mse_1 > mse_2:
         return profile_2[0]
