@@ -182,8 +182,8 @@ def compare_profiles_by_top_n(
         Returns None in case of incorrect input types.
     """
     if not (
-        check_profile(unknown_profile) is True
-        and check_profile(profile_to_compare) is True
+        check_profile(unknown_profile)
+        and check_profile(profile_to_compare)
         and isinstance(top_n, int)
         and top_n > 0
     ):
@@ -213,9 +213,9 @@ def detect_language_by_top_n(
         Returns None in case of incorrect input types.
     """
     if not (
-        check_profile(unknown_profile) is True
-        and check_profile(profile_1) is True
-        and check_profile(profile_2) is True
+        check_profile(unknown_profile)
+        and check_profile(profile_1)
+        and check_profile(profile_2)
         and isinstance(top_n, int)
         and top_n > 0
     ):
@@ -281,8 +281,8 @@ def compare_profiles_by_mse(
         In case of corrupt input arguments or invalid profile structure, None is returned.
     """
     if not (
-        check_profile(unknown_profile) is True
-        and check_profile(profile_to_compare) is True
+        check_profile(unknown_profile)
+        and check_profile(profile_to_compare)
     ):
         return None
 
@@ -319,9 +319,9 @@ def detect_language_by_mse(
         Returns None in case of incorrect input types.
     """
     if not (
-        check_profile(unknown_profile) is True
-        and check_profile(profile_1) is True
-        and check_profile(profile_2) is True
+        check_profile(unknown_profile)
+        and check_profile(profile_1)
+        and check_profile(profile_2)
     ):
         return None
 
@@ -352,7 +352,7 @@ def save_profile(profile: ProfileType, save_path: str) -> bool:
         bool: False in case of incorrect input types or if the profile
         is missing obligatory keys. True if the profile is saved.
     """
-    if not(check_profile(profile) is True and isinstance(save_path, str)):
+    if not(check_profile(profile) and isinstance(save_path, str)):
         return False
 
     profile_to_dict = {"name": profile[0], "freq": profile[1], "n_words": profile[2]}
@@ -428,6 +428,29 @@ def detect_language_advanced(
         The sequence is sorted by best MSE value, then by best Top-N value.
         Returns None in case of incorrect input types.
     """
+    if not(
+        check_profile(unknown_profile)
+        and isinstance(known_profiles, Sequence)
+        and all((check_profile(profile) for profile in known_profiles))
+        and isinstance(top_n, int)
+        and top_n > 0
+    ):
+        return None
+
+    metrics_stats = [
+        (
+            known_profile[0],
+            {
+                "MSE": compare_profiles_by_mse(unknown_profile, known_profile),
+                "Top-N": compare_profiles_by_top_n(unknown_profile, known_profile, top_n)
+            }
+        )
+        for known_profile in known_profiles
+    ]
+    return sorted(
+        metrics_stats,
+        key=lambda x: (-x[1].get("MSE"), -x[1].get("Top-N"), x[0])
+    )
 
 
 def print_report(
@@ -444,3 +467,33 @@ def print_report(
 
     In case of incorrect type inputs, does not print anything.
     """
+    if (
+        check_profile(unknown_profile)
+        and isinstance(metrics_stats, Sequence)
+        and all((isinstance(lang, tuple) for lang in metrics_stats))
+        and all((isinstance(lang[0], str) for lang in metrics_stats))
+        and all((isinstance(lang[1], dict) for lang in metrics_stats))
+        and all((isinstance(list(lang[1].keys())[0], str) for lang in metrics_stats))
+        and all((isinstance(list(lang[1].keys())[1], str) for lang in metrics_stats))
+        and all((isinstance(list(lang[1].values())[0], float) for lang in metrics_stats))
+        and all((isinstance(list(lang[1].values())[1], float) for lang in metrics_stats))
+    ):
+        popular_words = get_top_n_words(unknown_profile[1], top_n)
+        max_len_word = max(set(unknown_profile[1]), key=len)
+        min_len_word = min(set(unknown_profile[1]), key=len)
+        average_len = sum([len(token) for token in set(unknown_profile[1])]) / len(set(unknown_profile[1]))
+        print(
+            f"""
+            Unknown language stats
+            ======================
+            Popular words: {popular_words}
+            Max length word: {max_len_word}
+            Min length word: {min_len_word}
+            Average token length: {average_len:.5f}
+
+            Language scores
+            ---------------
+            """
+        )
+        for lang in metrics_stats:
+            print(f"{lang[0]}: MSE {list(lang[1].values())[0]:.5f}\tTop-N Score {list(lang[1].values())[1]:.5f}")
