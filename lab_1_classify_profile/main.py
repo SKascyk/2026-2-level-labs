@@ -481,7 +481,9 @@ def print_report(
         popular_words = get_top_n_words(unknown_profile[1], top_n)
         max_len_word = max(set(unknown_profile[1]), key=len)
         min_len_word = min(set(unknown_profile[1]), key=len)
-        average_len = sum([len(token) for token in set(unknown_profile[1])]) / len(set(unknown_profile[1]))
+        average_len = sum(
+            [len(token) for token in set(unknown_profile[1])]) / len(set(unknown_profile[1])
+        )
         print(
             f"""
             Unknown language stats
@@ -496,4 +498,8 @@ def print_report(
             """
         )
         for lang in metrics_stats:
-            print(f"{lang[0]}: MSE {list(lang[1].values())[0]:.5f}\tTop-N Score {list(lang[1].values())[1]:.5f}")
+            print(
+                f"{lang[0]}:",
+                f"MSE {list(lang[1].values())[0]:.5f}",
+                f"Top-N Score {list(lang[1].values())[1]:.5f}"
+            )
