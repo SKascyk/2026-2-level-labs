@@ -5,9 +5,9 @@ Language detection
 """
 
 # pylint:disable=unused-argument
-from typing import Sequence
-
 from json import dumps, loads
+
+from typing import Sequence
 
 FreqDictType = dict[str, float]
 "Frequency dictionary. Contains pairs of token and its frequency."
