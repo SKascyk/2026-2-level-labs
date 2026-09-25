@@ -482,8 +482,8 @@ def print_report(
         max_len_word = max(set(unknown_profile[1]), key=len)
         min_len_word = min(set(unknown_profile[1]), key=len)
         average_len = sum(
-            [len(token) for token in set(unknown_profile[1])]) / len(set(unknown_profile[1])
-        )
+            (len(token) for token in set(unknown_profile[1]))
+        ) / len(set(unknown_profile[1]))
         print(
             f"""
             Unknown language stats
