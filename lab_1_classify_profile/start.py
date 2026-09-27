@@ -64,20 +64,21 @@ def main() -> None:
     profiles = [de_profile, en_profile, unk_profile]
     path = "lab_1_classify_profile/assets/profiles"
     paths_to_profiles = []
-    for profile in profiles:
-        if profile is not None:
-            cp.save_profile(profile, path)
-            paths_to_profiles.append(path + f"/{profile[0]}.json")
+    for _ in profiles:
+        if _ is not None:
+            cp.save_profile(_, path)
+            paths_to_profiles.append(path + f"/{_[0]}.json")
     result = cp.collect_profiles(paths_to_profiles)
     assert result, "Detection result is None"
     # print(result)
-    paths_to_known_profiles = [path + "/de.json", path + "/en.json", path + "/la.json"]
-    known_profiles = cp.collect_profiles(paths_to_known_profiles)
-    if not(unk_profile is None or known_profiles is None):
-        result = cp.detect_language_advanced(unk_profile, known_profiles, 15)
+    paths_to_profiles.remove(path + "/unknown.json")
+    paths_to_profiles.append(path + "/la.json")
+    profiles = cp.collect_profiles(paths_to_profiles)
+    if not(unk_profile is None or profiles is None):
+        result = cp.detect_language_advanced(unk_profile, profiles, 15)
         print(result)
     assert result, "Detection result is None"
-    if not(unk_profile is None or known_profiles is None):
+    if not(unk_profile is None or result is None):
         cp.print_report(unk_profile, result, 15)
 
 
