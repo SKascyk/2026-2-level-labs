@@ -78,7 +78,7 @@ def main() -> None:
         print(result)
     assert result, "Detection result is None"
     if not(unk_profile is None or known_profiles is None):
-        cp.print_report(unk_profile, known_profiles, 15)
+        cp.print_report(unk_profile, result, 15)
 
 
 if __name__ == "__main__":
