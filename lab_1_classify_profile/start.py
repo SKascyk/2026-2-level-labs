@@ -19,9 +19,12 @@ def main() -> None:
     with open("lab_1_classify_profile/assets/texts/en.txt", "r", encoding="utf-8") as file:
         en_text = file.read()
     de_tokens = cp.tokenize(de_text)
-    cleaned_de_tokens = cp.remove_stop_words(de_tokens, stopwords) if de_tokens is not None else None
-    de_freqs = cp.calculate_frequencies(cleaned_de_tokens) if cleaned_de_tokens is not None else None
-    result = cp.get_top_n_words(de_freqs, 7) if de_freqs is not None else None
+    if de_tokens is not None:
+        cleaned_de_tokens = cp.remove_stop_words(de_tokens, stopwords)
+    if cleaned_de_tokens is not None:
+        de_freqs = cp.calculate_frequencies(cleaned_de_tokens)
+    if de_freqs is not None:
+        result = cp.get_top_n_words(de_freqs, 7)
     assert result, "Detection result is None"
     print(result)
     de_profile = cp.create_language_profile('de', de_text, stopwords)
