@@ -465,25 +465,25 @@ def print_report(
         and top_n > 0
     ):
         popular_words = get_top_n_words(unknown_profile[1], top_n)
-        max_len_word = max(unknown_profile[1], key=len)
-        min_len_word = min(unknown_profile[1], key=len)
+        max_len_word = max(sorted(unknown_profile[1], key=lambda item: item[0]), key=len)
+        min_len_word = min(sorted(unknown_profile[1], key=lambda item: item[0]), key=len)
         average_len = sum((len(token) for token in unknown_profile[1])) / len(unknown_profile[1])
         print(
-            f"""
-            Unknown language stats
-            ======================
-            Popular words: {popular_words}
-            Max length word: {max_len_word}
-            Min length word: {min_len_word}
-            Average token length: {average_len:.5f}
+            f"""Unknown language stats
+======================
+Popular words: {popular_words}
+Max length word: {max_len_word}
+Min length word: {min_len_word}
+Average token length: {average_len:.5f}
 
-            Language scores
-            ---------------
-            """
+Language scores
+---------------"""
         )
         for lang in metrics_stats:
+            mse_value = list(lang[1].values())[0]
+            top_n_value = list(lang[1].values())[1]
             print(
                 f"{lang[0]}:",
-                f"MSE {list(lang[1].values())[0]:.5f}",
-                f"Top-N Score {list(lang[1].values())[1]:.5f}"
+                f"MSE {mse_value:.5f}",
+                f"Top-N Score {top_n_value:.5f}"
             )
