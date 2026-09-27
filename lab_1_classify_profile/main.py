@@ -192,7 +192,7 @@ def compare_profiles_by_top_n(
     unk_top_n = get_top_n_words(unknown_profile[1], top_n)
     com_top_n = get_top_n_words(profile_to_compare[1], top_n)
     if not(unk_top_n is None or com_top_n is None):
-        return len(set(unk_top_n).intersection(set(com_top_n))) / len(unk_top_n)
+        return len(set(unk_top_n).intersection(com_top_n)) / len(unk_top_n)
     return None
 
 
@@ -286,19 +286,9 @@ def compare_profiles_by_mse(
     ):
         return None
 
-    tokens = list(set(unknown_profile[1]).union(set(profile_to_compare[1])))
-    unk_freqs = [
-        unknown_profile[1].get(token)
-        if token in unknown_profile[1]
-        else 0.0
-        for token in tokens
-    ]
-    com_freqs = [
-        profile_to_compare[1].get(token)
-        if token in profile_to_compare[1]
-        else 0.0
-        for token in tokens
-    ]
+    tokens = list(set(unknown_profile[1]).union(profile_to_compare[1]))
+    unk_freqs = [unknown_profile[1].get(token, 0.0) for token in tokens]
+    com_freqs = [profile_to_compare[1].get(token, 0.0) for token in tokens]
     return calculate_mse(com_freqs, unk_freqs)
 
 
@@ -479,11 +469,9 @@ def print_report(
         and all((isinstance(list(lang[1].values())[1], float) for lang in metrics_stats))
     ):
         popular_words = get_top_n_words(unknown_profile[1], top_n)
-        max_len_word = max(set(unknown_profile[1]), key=len)
-        min_len_word = min(set(unknown_profile[1]), key=len)
-        average_len = sum(
-            (len(token) for token in set(unknown_profile[1]))
-        ) / len(set(unknown_profile[1]))
+        max_len_word = max(unknown_profile[1], key=len)
+        min_len_word = min(unknown_profile[1], key=len)
+        average_len = sum((len(token) for token in unknown_profile[1])) / len(unknown_profile[1])
         print(
             f"""
             Unknown language stats
