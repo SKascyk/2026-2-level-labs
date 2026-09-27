@@ -461,10 +461,8 @@ def print_report(
         and all((isinstance(lang, tuple) for lang in metrics_stats))
         and all((isinstance(lang[0], str) for lang in metrics_stats))
         and all((isinstance(lang[1], dict) for lang in metrics_stats))
-        and all((isinstance(list(lang[1].keys())[0], str) for lang in metrics_stats))
-        and all((isinstance(list(lang[1].keys())[1], str) for lang in metrics_stats))
-        and all((isinstance(list(lang[1].values())[0], float) for lang in metrics_stats))
-        and all((isinstance(list(lang[1].values())[1], float) for lang in metrics_stats))
+        and isinstance(top_n, int)
+        and top_n > 0
     ):
         popular_words = get_top_n_words(unknown_profile[1], top_n)
         max_len_word = max(unknown_profile[1], key=len)
