@@ -135,10 +135,10 @@ def create_language_profile(
         return None
 
     tokens = tokenize(text)
-    cleaned_tokens = remove_stop_words(tokens, stop_words) if tokens is not None else None
-    dict_freqs = calculate_frequencies(cleaned_tokens) if cleaned_tokens is not None else None
-    unique_words = len(set(cleaned_tokens)) if cleaned_tokens is not None else None
-    if not(dict_freqs is None or unique_words is None):
+    cleaned_tokens = remove_stop_words(tokens, stop_words)
+    dict_freqs = calculate_frequencies(cleaned_tokens)
+    unique_words = len(dict_freqs) if dict_freqs is not None else None
+    if unique_words is not None:
         return language, dict_freqs, unique_words
     return None
 
