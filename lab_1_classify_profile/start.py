@@ -60,10 +60,12 @@ def main() -> None:
     # print(result)
     paths_to_known_profiles = [path + "/de.json", path + "/en.json", path + "/la.json"]
     known_profiles = collect_profiles(paths_to_known_profiles)
-    result = detect_language_advanced(unk_profile, known_profiles, 15)
-    print(result)
+    if not(unk_profile is None or known_profiles is None):
+        result = detect_language_advanced(unk_profile, known_profiles, 15)
+        print(result)
     assert result, "Detection result is None"
-    print_report(unk_profile, known_profiles, 15)
+    if not(unk_profile is None or known_profiles is None):
+        print_report(unk_profile, known_profiles, 15)
 
 
 if __name__ == "__main__":
