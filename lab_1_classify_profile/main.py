@@ -287,8 +287,10 @@ def compare_profiles_by_mse(
         return None
 
     tokens = list(set(unknown_profile[1]).union(profile_to_compare[1]))
-    unk_freqs = [unknown_profile[1].get(token, 0.0) for token in tokens]
-    com_freqs = [profile_to_compare[1].get(token, 0.0) for token in tokens]
+    unk_freqs, com_freqs = [], []
+    for token in tokens:
+        unk_freqs.append(unknown_profile[1].get(token, 0.0))
+        com_freqs.append(profile_to_compare[1].get(token, 0.0))
     return calculate_mse(com_freqs, unk_freqs)
 
 
