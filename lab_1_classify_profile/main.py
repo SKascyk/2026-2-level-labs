@@ -5,7 +5,7 @@ Language detection
 """
 
 # pylint:disable=unused-argument
-from json import dumps, loads
+from json import dumps, load
 from typing import Sequence
 
 FreqDictType = dict[str, float]
@@ -368,7 +368,7 @@ def load_profile(path_to_file: str) -> ProfileType | None:
         return None
 
     with open(path_to_file, "r", encoding="utf-8") as file:
-        dict_profile = loads(file.read())
+        dict_profile = load(file)
     profile = tuple(dict_profile.values()) if dict_profile is not None else None
     if check_profile(profile):
         return profile
