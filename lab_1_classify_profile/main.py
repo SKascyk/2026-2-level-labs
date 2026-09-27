@@ -471,8 +471,8 @@ def print_report(
         print("Unknown language stats")
         print("======================")
         print(f"Popular words: {popular_words}")
-        print(f"Max length word: {max_len_word}")
-        print(f"Min length word: {min_len_word}")
+        print(f"Max length word: '{max_len_word}'")
+        print(f"Min length word: '{min_len_word}'")
         print(f"Average token length: {average_len:.5f}\n")
 
         print("Language scores")
@@ -480,8 +480,9 @@ def print_report(
         for lang in metrics_stats:
             mse_value = list(lang[1].values())[0]
             top_n_value = list(lang[1].values())[1]
+            print(f"{lang[0]}:", end=" ")
             print(
-                f"{lang[0]}:",
                 f"MSE {mse_value:.5f}",
-                f"Top-N Score {top_n_value:.5f}"
+                f"Top-N Score {top_n_value:.5f}",
+                sep="  "
             )
