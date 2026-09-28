@@ -154,19 +154,18 @@ def check_profile(profile: ProfileType) -> bool:
         bool: Returns True if the profile has right structure and types,
         otherwise returns False.
     """
-    if (
-        isinstance(profile, tuple)
-        and len(profile) == 3
-        and isinstance(profile[0], str)
-        and isinstance(profile[1], dict)
-        and all(((
-            isinstance(key, str)
-            and isinstance(value, float)
-        ) for key, value in profile[1].items()
-        ))
-        and isinstance(profile[2], int)
-    ):
-        return True
+    if (isinstance(profile, tuple) and len(profile) == 3):
+        if (
+            isinstance(profile[0], str)
+            and isinstance(profile[1], dict)
+            and all(((
+                isinstance(key, str)
+                and isinstance(value, float)
+            ) for key, value in profile[1].items()
+            ))
+            and isinstance(profile[2], int)
+        ):
+            return True
     return False
 
 
