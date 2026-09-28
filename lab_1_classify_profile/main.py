@@ -464,15 +464,10 @@ def detect_language_advanced(
         if not isinstance(top_n_value, float):
             return None
         metrics_stats.append((known_profile[0], {"MSE": mse_value,"Top-N": top_n_value}))
-    if (
-        all((isinstance(list(lang[1].values())[0], float) for lang in metrics_stats))
-        and all((isinstance(list(lang[1].values())[1], float) for lang in metrics_stats))
-    ):
-        return sorted(
-            metrics_stats,
-            key=lambda x: (x[1].get("MSE", 0.0), -x[1].get("Top-N", 0.0), x[0])
-        )
-    return None
+    return sorted(
+        metrics_stats,
+        key=lambda x: (x[1].get("MSE", 0.0), -x[1].get("Top-N", 0.0), x[0])
+    )
 
 
 def print_report(
