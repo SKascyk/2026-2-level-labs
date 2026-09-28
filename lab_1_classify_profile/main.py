@@ -458,27 +458,16 @@ def detect_language_advanced(
     metrics_stats = []
     for known_profile in known_profiles:
         mse_value = compare_profiles_by_mse(unknown_profile, known_profile)
-        if mse_value is None:
+        if not isinstance(mse_value, float):
             return None
         top_n_value = compare_profiles_by_top_n(unknown_profile, known_profile, top_n)
-        if top_n_value is None:
+        if not isinstance(top_n_value, float):
             return None
         metrics_stats.append((known_profile[0], {"MSE": mse_value,"Top-N": top_n_value}))
-    if (
-        isinstance(metrics_stats, Sequence)
-        and all(((
-            isinstance(lang, tuple)
-            and len(lang) == 2
-            and isinstance(lang[0], str)
-            and isinstance(lang[1], dict)
-        ) for lang in metrics_stats
-        ))
-    ):
-        return sorted(
-            metrics_stats,
-            key=lambda x: (x[1].get("MSE"), -x[1].get("Top-N"), x[0])
-        )
-    return None
+    return sorted(
+        metrics_stats,
+        key=lambda x: (x[1].get("MSE"), -x[1].get("Top-N"), x[0])
+    )
 
 
 def print_report(
