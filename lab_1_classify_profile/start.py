@@ -53,6 +53,7 @@ def main() -> None:
     paths_to_profiles.append("lab_1_classify_profile/assets/profiles/la.json")
     prof_collection = cp.collect_profiles(paths_to_profiles)
     result = None
+    assert result, "Detection language is None"
     if not(unk_profile is None or prof_collection is None):
         result = cp.detect_language_advanced(unk_profile, prof_collection, 15)
         print(result)
