@@ -51,11 +51,12 @@ def main() -> None:
         if _ is not None:
             cp.save_profile(_, "lab_1_classify_profile/assets/profiles")
             paths_to_profiles.append(f"lab_1_classify_profile/assets/profiles/{_[0]}.json")
-    # if paths_to_profiles is not None:
-    #     print(f"{cp.collect_profiles(paths_to_profiles)}")
+    if paths_to_profiles is not None:
+        print(f"{cp.collect_profiles(paths_to_profiles)}")
     paths_to_profiles.remove("lab_1_classify_profile/assets/profiles/unknown.json")
     paths_to_profiles.append("lab_1_classify_profile/assets/profiles/la.json")
     prof_collection = cp.collect_profiles(paths_to_profiles)
+    result = None
     if not(unk_profile is None or prof_collection is None):
         result = cp.detect_language_advanced(unk_profile, prof_collection, 15)
         print(result)
