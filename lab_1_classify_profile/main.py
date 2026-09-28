@@ -473,6 +473,8 @@ def detect_language_advanced(
             and isinstance(lang[1], dict)
         ) for lang in metrics_stats
         ))
+        and all((isinstance(list(lang[1].values())[0], float) for lang in metrics_stats))
+        and all((isinstance(list(lang[1].values())[1], float) for lang in metrics_stats))
     ):
         return sorted(
             metrics_stats,
