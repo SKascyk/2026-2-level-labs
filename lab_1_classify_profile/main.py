@@ -380,14 +380,24 @@ def load_profile(path_to_file: str) -> ProfileType | None:
     ):
         return None
 
-    profile = (
-        dict_profile.get("name"),
-        dict_profile.get("freq"),
-        dict_profile.get("n_words")
-        )
+    name = dict_profile.get("name")
+    freq = dict_profile.get("freq")
+    n_words = dict_profile.get("n_words")
+
+    if not(
+        isinstance(name, str)
+        and isinstance(freq, dict)
+        and all(((
+            isinstance(key, str)
+            and isinstance(value, float)
+        ) for key, value in freq.items()
+        ))
+        and isinstance(n_words, int)
+    ):
+        return None
+    profile = name, freq, n_words
     if check_profile(profile):
         return profile
-    return None
 
 
 def collect_profiles(paths_to_profiles: Sequence[str]) -> Sequence[ProfileType] | None:
