@@ -371,7 +371,15 @@ def load_profile(path_to_file: str) -> ProfileType | None:
 
     with open(path_to_file, "r", encoding="utf-8") as file:
         dict_profile = load(file)
-    profile = tuple(dict_profile.values()) if dict_profile is not None else None
+    profile = (
+        (
+        dict_profile.get("name"),
+        dict_profile.get("freq"),
+        dict_profile.get("n_words")
+        )
+        if dict_profile is not None
+        else None
+    )
     if check_profile(profile):
         return profile
     return None
