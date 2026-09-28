@@ -30,7 +30,7 @@ def main() -> None:
         else None
     )
     if de_freqs is not None:
-        print(f"{cp.get_top_n_words(de_freqs, 7)}")
+        print(cp.get_top_n_words(de_freqs, 7))
     de_profile = cp.create_language_profile("de", de_text, stopwords)
     en_profile = cp.create_language_profile("en", en_text, stopwords)
     unk_profile = cp.create_language_profile("unknown", unknown_text, stopwords)
@@ -39,12 +39,8 @@ def main() -> None:
         or de_profile is None
         or en_profile is None
     ):
-        print(
-            f"{cp.detect_language_by_top_n(unk_profile, de_profile, en_profile, 15)}"
-        )
-        print(
-            f"{cp.detect_language_by_mse(unk_profile, de_profile, en_profile)}"
-        )
+        print(cp.detect_language_by_top_n(unk_profile, de_profile, en_profile, 15))
+        print(cp.detect_language_by_mse(unk_profile, de_profile, en_profile))
     profiles = [de_profile, en_profile, unk_profile]
     paths_to_profiles = []
     for _ in profiles:
@@ -52,7 +48,7 @@ def main() -> None:
             cp.save_profile(_, "lab_1_classify_profile/assets/profiles")
             paths_to_profiles.append(f"lab_1_classify_profile/assets/profiles/{_[0]}.json")
     if paths_to_profiles is not None:
-        print(f"{cp.collect_profiles(paths_to_profiles)}")
+        print(cp.collect_profiles(paths_to_profiles))
     paths_to_profiles.remove("lab_1_classify_profile/assets/profiles/unknown.json")
     paths_to_profiles.append("lab_1_classify_profile/assets/profiles/la.json")
     prof_collection = cp.collect_profiles(paths_to_profiles)
