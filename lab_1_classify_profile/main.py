@@ -398,6 +398,7 @@ def load_profile(path_to_file: str) -> ProfileType | None:
     profile = name, freq, n_words
     if check_profile(profile):
         return profile
+    return None
 
 
 def collect_profiles(paths_to_profiles: Sequence[str]) -> Sequence[ProfileType] | None:
