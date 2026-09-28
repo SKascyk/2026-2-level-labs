@@ -371,15 +371,20 @@ def load_profile(path_to_file: str) -> ProfileType | None:
 
     with open(path_to_file, "r", encoding="utf-8") as file:
         dict_profile = load(file)
+
+    if not(
+        isinstance(dict_profile, dict)
+        and "name" in dict_profile
+        and "freq" in dict_profile
+        and "n_words" in dict_profile
+    ):
+        return None
+
     profile = (
-        (
         dict_profile.get("name"),
         dict_profile.get("freq"),
         dict_profile.get("n_words")
         )
-        if dict_profile is not None
-        else None
-    )
     if check_profile(profile):
         return profile
     return None
@@ -435,16 +440,15 @@ def detect_language_advanced(
     ):
         return None
 
-    metrics_stats = [
-        (
-            known_profile[0],
-            {
-                "MSE": compare_profiles_by_mse(unknown_profile, known_profile),
-                "Top-N": compare_profiles_by_top_n(unknown_profile, known_profile, top_n)
-            }
-        )
-        for known_profile in known_profiles
-    ]
+    metrics_stats = []
+    for known_profile in known_profiles:
+        mse_value = compare_profiles_by_mse(unknown_profile, known_profile)
+        if mse_value is None:
+            return None
+        top_n_value = compare_profiles_by_top_n(unknown_profile, known_profile, top_n)
+        if top_n_value is None:
+            return None
+        metrics_stats.append((known_profile[0], {"MSE": mse_value,"Top-N": top_n_value}))
     return sorted(
         metrics_stats,
         key=lambda x: (x[1].get("MSE"), -x[1].get("Top-N"), x[0])
