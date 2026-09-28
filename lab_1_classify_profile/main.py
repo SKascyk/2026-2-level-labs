@@ -465,15 +465,7 @@ def detect_language_advanced(
             return None
         metrics_stats.append((known_profile[0], {"MSE": mse_value,"Top-N": top_n_value}))
     if (
-        isinstance(metrics_stats, Sequence)
-        and all(((
-            isinstance(lang, tuple)
-            and len(lang) == 2
-            and isinstance(lang[0], str)
-            and isinstance(lang[1], dict)
-        ) for lang in metrics_stats
-        ))
-        and all((isinstance(list(lang[1].values())[0], float) for lang in metrics_stats))
+        all((isinstance(list(lang[1].values())[0], float) for lang in metrics_stats))
         and all((isinstance(list(lang[1].values())[1], float) for lang in metrics_stats))
     ):
         return sorted(
