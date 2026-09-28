@@ -1,6 +1,6 @@
-'''
+"""
 Language detection starter.
-'''
+"""
 
 # pylint: disable=unused-variable, duplicate-code
 import lab_1_classify_profile.main as cp
