@@ -159,8 +159,11 @@ def check_profile(profile: ProfileType) -> bool:
         and len(profile) == 3
         and isinstance(profile[0], str)
         and isinstance(profile[1], dict)
-        and all((isinstance(key, str) for key in profile[1]))
-        and all((isinstance(value, float) for value in profile[1].values()))
+        and all(((
+            isinstance(key, str)
+            and isinstance(value, float)
+        ) for key, value in profile[1].items()
+        ))
         and isinstance(profile[2], int)
     ):
         return True
@@ -458,9 +461,13 @@ def print_report(
     if (
         check_profile(unknown_profile)
         and isinstance(metrics_stats, Sequence)
-        and all((isinstance(lang, tuple) for lang in metrics_stats))
-        and all((isinstance(lang[0], str) for lang in metrics_stats))
-        and all((isinstance(lang[1], dict) for lang in metrics_stats))
+        and all(((
+            isinstance(lang, tuple)
+            and len(lang) == 2
+            and isinstance(lang[0], str)
+            and isinstance(lang[1], dict)
+        ) for lang in metrics_stats
+        ))
         and isinstance(top_n, int)
         and top_n > 0
     ):
