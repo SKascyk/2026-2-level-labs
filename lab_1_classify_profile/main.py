@@ -470,7 +470,7 @@ def detect_language_advanced(
     ):
         return sorted(
             metrics_stats,
-            key=lambda x: (x[1].get("MSE"), -x[1].get("Top-N"), x[0])
+            key=lambda x: (x[1].get("MSE", 0.0), -x[1].get("Top-N", 0.0), x[0])
         )
     return None
 
