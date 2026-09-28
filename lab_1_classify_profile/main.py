@@ -412,15 +412,17 @@ def collect_profiles(paths_to_profiles: Sequence[str]) -> Sequence[ProfileType] 
         Sequence[ProfileType] | None: Sequence of loaded profiles.
         Returns None in case of incorrect input types.
     """
-    if (
+    if not(
         isinstance(paths_to_profiles, Sequence)
         and all((isinstance(path, str) for path in paths_to_profiles))
     ):
-        profiles = []
-        for path in paths_to_profiles:
-            profile = load_profile(path)
-            if profile is not None:
-                profiles.append(profile)
+        return None
+
+    profiles = []
+    for path in paths_to_profiles:
+        profile = load_profile(path)
+        if profile is not None:
+            profiles.append(profile)
     if all((check_profile(profile) for profile in profiles)):
         return profiles
     return None
