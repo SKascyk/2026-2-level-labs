@@ -24,6 +24,7 @@ def prepare_word(
 
     In case of corrupt input arguments, None is returned
     """
+    print('Hello, world!')
 
 
 def collect_frequencies(
