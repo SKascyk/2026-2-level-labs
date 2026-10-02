@@ -132,7 +132,7 @@ def merge_tokens(
             and all((isinstance(sym, str) for sym in word_by_sym))
         ) for word_by_sym in word_frequencies))
         and all((isinstance(frequency, int) for frequency in word_frequencies.values()))
-        and isinstance(pair, tuple)
+        and (isinstance(pair, tuple) and len(pair) == 2)
         and all((isinstance(sym, str) for sym in pair))
     ):
         return None
@@ -141,16 +141,14 @@ def merge_tokens(
     upd_word_frequencies = {}
     for word in word_frequencies:
         word_to_upd_dict = []
-        indices = list(range(len(word)))
-        for ind in indices:
-            if word[ind] != pair[0]:
-                word_to_upd_dict.append(word[ind])
+        ind = 0
+        while ind < len(word):
+            if ind < len(word) - 1 and (word[ind], word[ind + 1]) == pair:
+                word_to_upd_dict.append(new_token)
+                ind += 2
             else:
-                if word[ind + 1] != pair[1]:
-                    word_to_upd_dict.append(word[ind])
-                else:
-                    word_to_upd_dict.append(new_token)
-                    indices.remove(ind + 1)
+                word_to_upd_dict.append(word[ind])
+                ind += 1
         upd_word_frequencies[tuple(word_to_upd_dict)] = word_frequencies.get(word)
     return upd_word_frequencies
 
