@@ -60,7 +60,7 @@ def collect_frequencies(
     if not(
         (isinstance(text, str) and text)
         and (isinstance(start_of_word, str) or start_of_word is None)
-        and (isinstance(end_of_word, str) or end_of_word is None)
+        and isinstance(end_of_word, str)
     ):
         return None
 
@@ -101,10 +101,11 @@ def count_tokens_pairs(
         return None
 
     pairs = []
-    for word in word_frequencies:
+    for word, frequency in word_frequencies.items():
         for ind in range(len(word) - 1):
             pair = word[ind], word[ind + 1]
-            pairs.append(pair)
+            for _ in range(frequency):
+                pairs.append(pair)
     return {pair: pairs.count(pair) for pair in pairs}
 
 
@@ -171,6 +172,35 @@ def train(
     In case of corrupt input arguments or functions used return None,
     None is returned
     """
+    if not(
+        ((
+            isinstance(word_frequencies, dict)
+            and all(((
+                isinstance(word_by_sym, tuple)
+                and all((isinstance(sym, str) for sym in word_by_sym))
+            ) for word_by_sym in word_frequencies))
+            and all((isinstance(frequency, int) for frequency in word_frequencies.values()))
+        ) and word_frequencies)
+        and isinstance(num_merges, int)
+    ):
+        return None
+
+    for _ in range(num_merges):
+        pairs = count_tokens_pairs(word_frequencies)
+        if pairs is None:
+            return None
+        if not pairs:
+            break
+        sorted_pairs = sorted(
+            pairs.items(),
+            key=lambda item: (-item[1], -len("".join(item[0])), "".join(item[0]))
+        ) if pairs is not None else None
+        word_frequencies = (
+            merge_tokens(word_frequencies, sorted_pairs[0][0])
+            if sorted_pairs is not None
+            else None
+        )
+    return word_frequencies
 
 
 def get_vocabulary(
@@ -189,6 +219,24 @@ def get_vocabulary(
 
     In case of corrupt input arguments, None is returned
     """
+    if not(
+        isinstance(word_frequencies, dict)
+        and all(((
+            isinstance(word_by_sym, tuple)
+            and all((isinstance(sym, str) for sym in word_by_sym))
+        ) for word_by_sym in word_frequencies))
+        and all((isinstance(frequency, int) for frequency in word_frequencies.values()))
+        and isinstance(unknown_token, str)
+    ):
+        return None
+
+    vocabulary = {unknown_token}
+    for word in word_frequencies:
+        for token in word:
+            vocabulary.add(token)
+            vocabulary.update(token)
+    sorted_vocabulary = sorted(vocabulary, key=lambda token: (-len(token), token))
+    return {token: ident for ident, token in enumerate(sorted_vocabulary)}
 
 
 def decode(
@@ -210,6 +258,27 @@ def decode(
 
     In case of corrupt input arguments, None is returned
     """
+    if not(
+        ((
+            isinstance(encoded_text, Sequence)
+            and all((isinstance(num, int) for num in encoded_text))
+        ) and encoded_text)
+        and ((
+            isinstance(vocabulary, dict)
+            and all((
+                isinstance(item[0], str) and isinstance(item[1], int)
+                for item in vocabulary.items()
+            ))
+        ) and vocabulary)
+        and (isinstance(end_of_word_token, str) or end_of_word_token is None)
+    ):
+        return None
+
+    reversed_vocabulary = {ident: token for token, ident in vocabulary.items()}
+    decoded_text = "".join([reversed_vocabulary.get(ident) for ident in encoded_text])
+    if end_of_word_token is not None:
+        decoded_text = decoded_text.replace(end_of_word_token, " ")
+    return decoded_text
 
 
 def tokenize_word(
