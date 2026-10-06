@@ -275,7 +275,8 @@ def decode(
         return None
 
     reversed_vocabulary = {ident: token for token, ident in vocabulary.items()}
-    decoded_text = "".join([reversed_vocabulary.get(ident) for ident in encoded_text])
+    decoded_tokens = [reversed_vocabulary.get(ident) for ident in encoded_text]
+    decoded_text = "".join(decoded_tokens)
     if end_of_word_token is not None:
         decoded_text = decoded_text.replace(end_of_word_token, " ")
     return decoded_text
