@@ -315,6 +315,37 @@ def tokenize_word(
     ):
         return None
 
+    sorted_tokens = sorted(vocabulary, key=lambda token: (-len(token), token))
+    word_to_str = "".join(word)
+    covered = [False] * len(word_to_str)
+    word_fragments = []
+
+    for token in sorted_tokens:
+        current_start_ind = 0
+        while True:
+            start_of_token = word_to_str.find(token, current_start_ind)
+            if start_of_token == -1:
+                break
+            end_of_token = start_of_token + len(token)
+
+            if any(covered[start_of_token:end_of_token]):
+                current_start_ind = start_of_token + 1
+            else:
+                for i in range(start_of_token, end_of_token):
+                    covered[i] = True
+                word_fragments.append((
+                    start_of_token,
+                    end_of_token,
+                    vocabulary[token]
+                ))
+                current_start_ind = end_of_token
+
+    for ind, iscovered in enumerate(covered):
+        if not iscovered:
+            word_fragments.append((ind, ind + 1, vocabulary[unknown_token]))
+    sorted_word_fragments = sorted(word_fragments, key=lambda item: item[0])
+    return [item[2] for item in sorted_word_fragments]
+
 
 def load_vocabulary(vocab_path: str) -> dict[str, int] | None:
     """
@@ -382,6 +413,23 @@ def encode(
         and isinstance(unknown_token, str)
     ):
         return None
+
+    wordlist = original_text.split()
+    encoded_text = []
+    for word in wordlist:
+        prepared_word = prepare_word(word, start_of_word_token, end_of_word_token)
+        if prepared_word is None:
+            return None
+        tokenized_word = tokenize_word(
+            prepared_word,
+            vocabulary,
+            end_of_word_token,
+            unknown_token
+        )
+        if tokenized_word is None:
+            return None
+        encoded_text.extend(tokenized_word)
+    return encoded_text
 
 
 def collect_ngrams(text: str, order: int) -> list[tuple[str, ...]] | None:
@@ -492,3 +540,18 @@ def calculate_bleu(actual: str | None, reference: str, max_order: int = 3) -> fl
         and isinstance(max_order, int)
     ):
         return None
+
+    precisions = []
+    for i in range(1, max_order + 1):
+        actual_ngrams = collect_ngrams(actual, i)
+        reference_ngrams = collect_ngrams(reference, i)
+        if actual_ngrams is None or reference_ngrams is None:
+            return None
+        precision = calculate_precision(actual_ngrams, reference_ngrams)
+        if precision is None:
+            return None
+        precisions.append(precision)
+    geo_mean = calculate_geo_mean(precisions, max_order)
+    if geo_mean is None:
+        return None
+    return geo_mean * 100
