@@ -5,6 +5,8 @@ BPE and machine translation evaluation
 """
 
 # pylint:disable=unused-argument
+from json import load
+from math import e, exp, log
 from typing import Sequence
 
 
@@ -299,6 +301,19 @@ def tokenize_word(
 
     In case of corrupt input arguments, None is returned
     """
+    if not(
+        (isinstance(word, tuple) and all((isinstance(sym, str) for sym in word)))
+        and (
+            isinstance(vocabulary, dict)
+            and all((
+                isinstance(item[0], str) and isinstance(item[1], int)
+                for item in vocabulary.items()
+            ))
+        )
+        and (isinstance(end_of_word, str) or end_of_word is None)
+        and isinstance(unknown_token, str)
+    ):
+        return None
 
 
 def load_vocabulary(vocab_path: str) -> dict[str, int] | None:
@@ -313,6 +328,21 @@ def load_vocabulary(vocab_path: str) -> dict[str, int] | None:
 
     In case of corrupt input arguments, None is returned
     """
+    if not isinstance(vocab_path, str):
+        return None
+
+    with open(vocab_path, "r", encoding="utf-8") as file:
+        vocab = load(file)
+
+    if not(
+        isinstance(vocab, dict)
+        and all((
+            isinstance(item[0], str) and isinstance(item[1], int)
+            for item in vocab.items()
+        ))
+    ):
+        return None
+    return vocab
 
 
 def encode(
@@ -338,6 +368,20 @@ def encode(
     In case of corrupt input arguments or functions used return None,
     None is returned
     """
+    if not(
+        isinstance(original_text, str)
+        and (
+            isinstance(vocabulary, dict)
+            and all((
+                isinstance(item[0], str) and isinstance(item[1], int)
+                for item in vocabulary.items()
+            ))
+        )
+        and (isinstance(start_of_word_token, str) or start_of_word_token is None)
+        and (isinstance(end_of_word_token, str) or end_of_word_token is None)
+        and isinstance(unknown_token, str)
+    ):
+        return None
 
 
 def collect_ngrams(text: str, order: int) -> list[tuple[str, ...]] | None:
@@ -353,6 +397,15 @@ def collect_ngrams(text: str, order: int) -> list[tuple[str, ...]] | None:
 
     In case of corrupt input arguments, None is returned
     """
+    if not(isinstance(text, str) and isinstance(order, int)):
+        return None
+
+    ngrams = []
+    for ind in range(len(text) - order + 1):
+        text_fragment = text[ind:ind+order]
+        ngrams.append(tuple(text_fragment))
+    return ngrams
+
 
 
 def calculate_precision(
@@ -370,6 +423,25 @@ def calculate_precision(
 
     In case of corrupt input arguments, None is returned.
     """
+    if not(
+        isinstance(actual, Sequence)
+        and isinstance(reference, Sequence)
+        and all((
+            isinstance(ngram, tuple)
+            and all((isinstance(sym, str) for sym in ngram))
+        ) for ngram in actual)
+        and all((
+            isinstance(ngram, tuple)
+            and all((isinstance(sym, str) for sym in ngram))
+        ) for ngram in reference)
+    ):
+        return None
+
+    if not actual or not reference:
+        return 0.0
+
+    coincidence = set(actual) & set(reference)
+    return len(coincidence) / len(set(reference))
 
 
 def calculate_geo_mean(precisions: Sequence[float], max_order: int) -> float | None:
@@ -385,6 +457,18 @@ def calculate_geo_mean(precisions: Sequence[float], max_order: int) -> float | N
 
     In case of corrupt input arguments, None is returned
     """
+    if not(
+        (isinstance(precisions, Sequence) and precisions)
+        and all(isinstance(precision, (float, int)) for precision in precisions)
+        and (isinstance(max_order, int) and max_order > 0)
+    ):
+        return None
+
+    if any(precision <= 0 for precision in precisions):
+        return 0.0
+
+    precision_sum = sum(log(precision, e) for precision in precisions)
+    return exp(max_order**(-1) * precision_sum)
 
 
 def calculate_bleu(actual: str | None, reference: str, max_order: int = 3) -> float | None:
@@ -402,3 +486,9 @@ def calculate_bleu(actual: str | None, reference: str, max_order: int = 3) -> fl
     In case of corrupt input arguments or functions used return None,
     None is returned
     """
+    if not(
+        (isinstance(actual, str) and actual)
+        and isinstance(reference, str)
+        and isinstance(max_order, int)
+    ):
+        return None
