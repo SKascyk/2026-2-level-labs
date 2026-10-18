@@ -316,12 +316,12 @@ def tokenize_word(
     ):
         return None
 
-    sorted_tokens = sorted(vocabulary, key=lambda token: (-len(token), token))
+    vocabulary = dict(sorted(vocabulary.items(), key=lambda item: (-len(item[0]), item[0])))
     word_to_str = "".join(word)
     covered = [False] * len(word_to_str)
     word_fragments = []
 
-    for token in sorted_tokens:
+    for token in vocabulary:
         current_start_ind = 0
         while True:
             start_of_token = word_to_str.find(token, current_start_ind)
@@ -341,8 +341,8 @@ def tokenize_word(
                 ))
                 current_start_ind = end_of_token
 
-    for ind in range(len(covered)):
-        if not covered[ind]:
+    for ind, iscovered in enumerate(covered):
+        if not iscovered:
             word_fragments.append((ind, ind + 1, vocabulary[unknown_token]))
     sorted_word_fragments = sorted(word_fragments, key=lambda item: item[0])
     return [item[2] for item in sorted_word_fragments]
