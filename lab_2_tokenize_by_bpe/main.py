@@ -187,6 +187,8 @@ def train(
         return None
 
     for _ in range(num_merges):
+        if word_frequencies is None:
+            return None
         pairs = count_tokens_pairs(word_frequencies)
         if pairs is None:
             return None
