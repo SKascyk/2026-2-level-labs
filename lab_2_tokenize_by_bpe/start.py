@@ -9,7 +9,7 @@ from lab_2_tokenize_by_bpe.main import (
     encode,
     get_vocabulary,
     load_vocabulary,
-    train
+    train,
 )
 
 # pylint:disable=too-many-locals, unused-variable
@@ -21,7 +21,11 @@ def main() -> None:
     """
     with open("lab_2_tokenize_by_bpe/assets/text.txt", "r", encoding="utf-8") as text_file:
         text = text_file.read()
-    with open("lab_2_tokenize_by_bpe/assets/secrets/secret_4.txt", "r", encoding="utf-8") as text_file:
+    with open(
+        "lab_2_tokenize_by_bpe/assets/secrets/secret_4.txt",
+        "r",
+        encoding="utf-8"
+    ) as text_file:
         secret_text = text_file.read()
     with open("lab_2_tokenize_by_bpe/assets/en_raw.txt", "r", encoding="utf-8") as text_file:
         en_text_ref_translation = text_file.read()

@@ -339,8 +339,8 @@ def tokenize_word(
                 ))
                 current_start_ind = end_of_token
 
-    for ind, iscovered in enumerate(covered):
-        if not iscovered:
+    for ind in range(len(covered)):
+        if not covered[ind]:
             word_fragments.append((ind, ind + 1, vocabulary[unknown_token]))
     sorted_word_fragments = sorted(word_fragments, key=lambda item: item[0])
     return [item[2] for item in sorted_word_fragments]
