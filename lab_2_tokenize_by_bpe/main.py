@@ -66,13 +66,12 @@ def collect_frequencies(
     ):
         return None
 
-    list_of_words = text.split()
     word_frequencies = {}
-    for word in list_of_words:
+    for word in text.split():
         word_by_sym = prepare_word(word, start_of_word, end_of_word)
         if word_by_sym is None:
             return None
-        word_frequencies[word_by_sym] = list_of_words.count(word)
+        word_frequencies[word_by_sym] = word_frequencies.get(word_by_sym, 0) + 1
     return word_frequencies
 
 
@@ -94,21 +93,20 @@ def count_tokens_pairs(
     """
     if not(
         isinstance(word_frequencies, dict)
-        and all(((
+        and all((
             isinstance(word_by_sym, tuple)
             and all((isinstance(sym, str) for sym in word_by_sym))
-        ) for word_by_sym in word_frequencies))
-        and all((isinstance(frequency, int) for frequency in word_frequencies.values()))
+        ) for word_by_sym in word_frequencies)
+        and all(isinstance(frequency, int) for frequency in word_frequencies.values())
     ):
         return None
 
-    pairs = []
+    pairs = {}
     for word, frequency in word_frequencies.items():
         for ind in range(len(word) - 1):
             pair = word[ind], word[ind + 1]
-            for _ in range(frequency):
-                pairs.append(pair)
-    return {pair: pairs.count(pair) for pair in pairs}
+            pairs[pair] = pairs.get(pair, 0) + frequency
+    return pairs
 
 
 def merge_tokens(
@@ -130,13 +128,13 @@ def merge_tokens(
     """
     if not(
         isinstance(word_frequencies, dict)
-        and all(((
+        and all((
             isinstance(word_by_sym, tuple)
-            and all((isinstance(sym, str) for sym in word_by_sym))
-        ) for word_by_sym in word_frequencies))
-        and all((isinstance(frequency, int) for frequency in word_frequencies.values()))
+            and all(isinstance(sym, str) for sym in word_by_sym)
+        ) for word_by_sym in word_frequencies)
+        and all(isinstance(frequency, int) for frequency in word_frequencies.values())
         and (isinstance(pair, tuple) and len(pair) == 2)
-        and all((isinstance(sym, str) for sym in pair))
+        and all(isinstance(sym, str) for sym in pair)
     ):
         return None
 
@@ -175,14 +173,15 @@ def train(
     None is returned
     """
     if not(
-        ((
+        (
             isinstance(word_frequencies, dict)
-            and all(((
+            and all((
                 isinstance(word_by_sym, tuple)
-                and all((isinstance(sym, str) for sym in word_by_sym))
-            ) for word_by_sym in word_frequencies))
-            and all((isinstance(frequency, int) for frequency in word_frequencies.values()))
-        ) and word_frequencies)
+                and all(isinstance(sym, str) for sym in word_by_sym)
+            ) for word_by_sym in word_frequencies)
+            and all(isinstance(frequency, int) for frequency in word_frequencies.values())
+        )
+        and word_frequencies
         and isinstance(num_merges, int)
     ):
         return None
@@ -192,7 +191,7 @@ def train(
         if pairs is None:
             return None
         if not pairs:
-            break
+            return word_frequencies
         sorted_pairs = sorted(
             pairs.items(),
             key=lambda item: (-item[1], -len("".join(item[0])), "".join(item[0]))
@@ -223,11 +222,11 @@ def get_vocabulary(
     """
     if not(
         isinstance(word_frequencies, dict)
-        and all(((
+        and all((
             isinstance(word_by_sym, tuple)
-            and all((isinstance(sym, str) for sym in word_by_sym))
-        ) for word_by_sym in word_frequencies))
-        and all((isinstance(frequency, int) for frequency in word_frequencies.values()))
+            and all(isinstance(sym, str) for sym in word_by_sym)
+        ) for word_by_sym in word_frequencies)
+        and all(isinstance(frequency, int) for frequency in word_frequencies.values())
         and isinstance(unknown_token, str)
     ):
         return None
@@ -263,21 +262,21 @@ def decode(
     if not(
         ((
             isinstance(encoded_text, Sequence)
-            and all((isinstance(num, int) for num in encoded_text))
+            and all(isinstance(num, int) for num in encoded_text)
         ) and encoded_text)
         and ((
             isinstance(vocabulary, dict)
-            and all((
+            and all(
                 isinstance(item[0], str) and isinstance(item[1], int)
                 for item in vocabulary.items()
-            ))
+            )
         ) and vocabulary)
         and (isinstance(end_of_word_token, str) or end_of_word_token is None)
     ):
         return None
 
     reversed_vocabulary = {ident: token for token, ident in vocabulary.items()}
-    decoded_tokens = [reversed_vocabulary.get(ident) for ident in encoded_text]
+    decoded_tokens = [reversed_vocabulary[ident] for ident in encoded_text]
     decoded_text = "".join(decoded_tokens)
     if end_of_word_token is not None:
         decoded_text = decoded_text.replace(end_of_word_token, " ")
@@ -302,13 +301,13 @@ def tokenize_word(
     In case of corrupt input arguments, None is returned
     """
     if not(
-        (isinstance(word, tuple) and all((isinstance(sym, str) for sym in word)))
+        (isinstance(word, tuple) and all(isinstance(sym, str) for sym in word))
         and (
             isinstance(vocabulary, dict)
-            and all((
+            and all(
                 isinstance(item[0], str) and isinstance(item[1], int)
                 for item in vocabulary.items()
-            ))
+            )
         )
         and (isinstance(end_of_word, str) or end_of_word is None)
         and isinstance(unknown_token, str)
@@ -403,10 +402,10 @@ def encode(
         isinstance(original_text, str)
         and (
             isinstance(vocabulary, dict)
-            and all((
+            and all(
                 isinstance(item[0], str) and isinstance(item[1], int)
                 for item in vocabulary.items()
-            ))
+            )
         )
         and (isinstance(start_of_word_token, str) or start_of_word_token is None)
         and (isinstance(end_of_word_token, str) or end_of_word_token is None)
@@ -476,11 +475,11 @@ def calculate_precision(
         and isinstance(reference, Sequence)
         and all((
             isinstance(ngram, tuple)
-            and all((isinstance(sym, str) for sym in ngram))
+            and all(isinstance(sym, str) for sym in ngram)
         ) for ngram in actual)
         and all((
             isinstance(ngram, tuple)
-            and all((isinstance(sym, str) for sym in ngram))
+            and all(isinstance(sym, str) for sym in ngram)
         ) for ngram in reference)
     ):
         return None
