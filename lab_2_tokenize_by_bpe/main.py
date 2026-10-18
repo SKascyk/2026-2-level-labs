@@ -140,7 +140,7 @@ def merge_tokens(
 
     new_token = "".join(pair)
     upd_word_frequencies = {}
-    for word in word_frequencies:
+    for word, frequency in word_frequencies.items():
         word_to_upd_dict = []
         ind = 0
         while ind < len(word):
@@ -150,7 +150,7 @@ def merge_tokens(
             else:
                 word_to_upd_dict.append(word[ind])
                 ind += 1
-        upd_word_frequencies[tuple(word_to_upd_dict)] = word_frequencies.get(word)
+        upd_word_frequencies[tuple(word_to_upd_dict)] = frequency
     return upd_word_frequencies
 
 
@@ -415,9 +415,8 @@ def encode(
     ):
         return None
 
-    wordlist = original_text.split()
     encoded_text = []
-    for word in wordlist:
+    for word in original_text.split():
         prepared_word = prepare_word(word, start_of_word_token, end_of_word_token)
         if prepared_word is None:
             return None
