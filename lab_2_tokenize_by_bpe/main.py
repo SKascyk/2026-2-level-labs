@@ -316,36 +316,58 @@ def tokenize_word(
     ):
         return None
 
+    # vocabulary = dict(sorted(vocabulary.items(), key=lambda item: (-len(item[0]), item[0])))
+    # word_to_str = "".join(word)
+    # covered = [False] * len(word_to_str)
+    # word_fragments = []
+
+    # for token in vocabulary:
+    #     current_start_ind = 0
+    #     while True:
+    #         start_of_token = word_to_str.find(token, current_start_ind)
+    #         if start_of_token == -1:
+    #             break
+    #         end_of_token = start_of_token + len(token)
+
+    #         if any(covered[start_of_token:end_of_token]):
+    #             current_start_ind = start_of_token + 1
+    #         else:
+    #             for i in range(start_of_token, end_of_token):
+    #                 covered[i] = True
+    #             word_fragments.append((
+    #                 start_of_token,
+    #                 end_of_token,
+    #                 vocabulary[token]
+    #             ))
+    #             current_start_ind = end_of_token
+
+    # for ind, iscovered in enumerate(covered):
+    #     if not iscovered:
+    #         word_fragments.append((ind, ind + 1, vocabulary[unknown_token]))
+    # sorted_word_fragments = sorted(word_fragments, key=lambda item: item[0])
+    # return [item[2] for item in sorted_word_fragments]
+
+    tokens = list(word)
     vocabulary = dict(sorted(vocabulary.items(), key=lambda item: (-len(item[0]), item[0])))
-    word_to_str = "".join(word)
-    covered = [False] * len(word_to_str)
-    word_fragments = []
 
     for token in vocabulary:
-        current_start_ind = 0
-        while True:
-            start_of_token = word_to_str.find(token, current_start_ind)
-            if start_of_token == -1:
-                break
-            end_of_token = start_of_token + len(token)
-
-            if any(covered[start_of_token:end_of_token]):
-                current_start_ind = start_of_token + 1
+        ind = 0
+        updated_tokens = []
+        while ind < len(tokens):
+            if "".join(tokens[ind:ind+len(token)]) == token:
+                updated_tokens.append(token)
+                ind += len(token)
             else:
-                for i in range(start_of_token, end_of_token):
-                    covered[i] = True
-                word_fragments.append((
-                    start_of_token,
-                    end_of_token,
-                    vocabulary[token]
-                ))
-                current_start_ind = end_of_token
+                updated_tokens.append(tokens[ind])
+                ind += 1
+        tokens = updated_tokens
 
-    for ind, iscovered in enumerate(covered):
-        if not iscovered:
-            word_fragments.append((ind, ind + 1, vocabulary[unknown_token]))
-    sorted_word_fragments = sorted(word_fragments, key=lambda item: item[0])
-    return [item[2] for item in sorted_word_fragments]
+    return [
+        vocabulary[token]
+        if token in vocabulary
+        else vocabulary[unknown_token]
+        for token in tokens
+    ]
 
 
 def load_vocabulary(vocab_path: str) -> dict[str, int] | None:
