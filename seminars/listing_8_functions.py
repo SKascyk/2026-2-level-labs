@@ -147,7 +147,7 @@ def calculate_sum() -> int:
 
 
 # Task 2:
-def calculate_power(number: int, power: int) -> int:
+def calculate_power() -> int:
     """
     Raise the number to the required power.
 
@@ -158,13 +158,9 @@ def calculate_power(number: int, power: int) -> int:
     Returns:
         int: number in the required power
     """
-    return number**power
+    # student implementation goes here
 
-print(
-    calculate_power(2, 3),
-    calculate_power(7, 2),
-    calculate_power(1589329, 0)
-)
+
 # Function calls with expected result:
 # calculate_power(2, 3) -> 8
 # calculate_power(7, 2) -> 49
@@ -172,7 +168,7 @@ print(
 
 
 # Task 3:
-def calculate_factorial(number: int) -> int:
+def calculate_factorial() -> int:
     """
     Calculate factorial of the received number.
 
@@ -182,15 +178,9 @@ def calculate_factorial(number: int) -> int:
     Returns:
         int: factorial of the received number
     """
-    res = 1
-    while number > 1:
-        res *= number
-        number -= 1
-    return res
+    # student implementation goes here
 
-print(
-    calculate_factorial(3),
-)
+
 # Function calls with expected result:
 # calculate_factorial(3) -> 6
 # calculate_factorial(2) -> 2
@@ -198,7 +188,7 @@ print(
 
 
 # Task 4:
-def encode_message(message: str, encode_dict: dict) -> list:
+def encode_message() -> list:
     """
     Encode the message.
 
@@ -209,23 +199,16 @@ def encode_message(message: str, encode_dict: dict) -> list:
     Returns:
         list: list of digits as an encoded message
     """
-    symlst = list(message)
-    encoded_message = []
-    for sym in symlst:
-        encoded_message.append(encode_dict.get(sym))
-    return encoded_message
+    # student implementation goes here
 
-print(
-    encode_message("hello", {"h": 1, "e": 2, "l": 3, "o": 4}),
-    encode_message("abba", {"a": 1, "b": 2, "c": 3, "d": 4})
-)
+
 # Function calls with expected result:
 # encode_message("hello", {"h": 1, "e": 2, "l": 3, "o": 4}) -> [1, 2, 3, 3, 4]
 # encode_message("abba", {"a": 1, "b": 2, "c": 3, "d": 4}) -> [1, 2, 2, 1]
 
 
 # Task 5:
-def capitalize_string(input_string: str) -> str:
+def capitalize_string() -> str:
     """
     Return capitalized version of the string.
 
@@ -235,12 +218,9 @@ def capitalize_string(input_string: str) -> str:
     Returns:
         str: capitalized string
     """
-    return input_string.upper()
+    # student implementation goes here
 
-print(
-    capitalize_string("I love programming on Python"),
-    capitalize_string("Functions are amazing")
-)
+
 # Function calls with expected result:
 # capitalize_string("I love programming on Python") -> I LOVE PROGRAMMING ON PYTHON
 # capitalize_string("Functions are amazing") -> FUNCTIONS ARE AMAZING
