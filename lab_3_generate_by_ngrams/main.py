@@ -252,8 +252,8 @@ class TextProcessor:
             end_of_word_token,
             " ",
         ).capitalize().strip()
-        postprocessed_text += "."
-        return postprocessed_text
+        return postprocessed_text + "."
+
 
 class WordProcessor(TextProcessor):
     """
@@ -290,6 +290,12 @@ class WordProcessor(TextProcessor):
 
         In case of corrupt input arguments, an element is not added to storage
         """
+        # if not (isinstance(element, str) and element):
+        #     return None
+
+        # if element not in self._storage:
+        #     self._storage[element] = len(self._storage)
+        # return True
 
     def _postprocess_decoded_text(self, decoded_corpus: tuple[str, ...]) -> str | None:
         """
@@ -327,6 +333,9 @@ class NGramLanguageModel:
             encoded_corpus (tuple | None): Encoded text
             n_gram_size (int): A size of n-grams to use for language modelling
         """
+        self._encoded_corpus = encoded_corpus
+        self.__n_gram_size = n_gram_size
+        self._n_gram_frequencies = {}
 
     def get_n_gram_size(self) -> int:  # type: ignore[empty-body]
         """
@@ -335,6 +344,7 @@ class NGramLanguageModel:
         Returns:
             int: Size of stored n_grams
         """
+        return self.__n_gram_size
 
     def set_n_grams(self, frequencies: dict) -> None:
         """
@@ -356,6 +366,16 @@ class NGramLanguageModel:
         In case of corrupt input arguments or methods used return None,
         False is returned
         """
+        n_grams = self._extract_n_grams(self._encoded_corpus)
+        if n_grams is None:
+            return False
+
+        n_grams_cut = tuple(n_gram[:-1] for n_gram in n_grams)
+        for n_gram in n_grams:
+            if n_gram not in self._n_gram_frequencies:
+                frequency = n_grams.count(n_gram) / n_grams_cut.count(n_gram[:-1])
+                self._n_gram_frequencies[n_gram] = frequency
+        return True
 
     def generate_next_token(self, sequence: tuple[int, ...]) -> dict | None:
         """
@@ -369,6 +389,23 @@ class NGramLanguageModel:
 
         In case of corrupt input arguments, None is returned
         """
+        if not(
+            (isinstance(sequence, tuple) and sequence)
+            and all(isinstance(identifier, int) for identifier in sequence)
+        ):
+            return None
+
+        n_gram_size = self.get_n_gram_size()
+        if not isinstance(n_gram_size, int):
+            return None
+        if len(sequence) < n_gram_size - 1:
+            return None
+
+        candidates = {}
+        for n_gram in self._n_gram_frequencies:
+            if n_gram[:-1] == sequence[len(sequence) - n_gram_size + 1:]:
+                candidates[n_gram[-1]] = self._n_gram_frequencies[n_gram]
+        return candidates
 
     def _extract_n_grams(
         self, encoded_corpus: tuple[int, ...]
@@ -384,6 +421,20 @@ class NGramLanguageModel:
 
         In case of corrupt input arguments, None is returned
         """
+        if not(
+            (isinstance(encoded_corpus, tuple) and encoded_corpus)
+            and all(isinstance(identifier, int) for identifier in encoded_corpus)
+        ):
+            return None
+
+        n_gram_size = self.get_n_gram_size()
+        if not isinstance(n_gram_size, int):
+            return None
+
+        n_grams = []
+        for ind in range(len(encoded_corpus) - n_gram_size + 1):
+            n_grams.append(encoded_corpus[ind:ind + n_gram_size])
+        return tuple(n_grams)
 
 
 class GreedyTextGenerator:
