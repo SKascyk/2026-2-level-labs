@@ -106,8 +106,10 @@ class TextProcessor:
         if not isinstance(element_id, int):
             return None
 
-        reversed_storage = {value: key for key, value in self._storage.items()}
-        return reversed_storage.get(element_id)
+        for element, identifier in self._storage.items():
+            if identifier == element_id:
+                return element
+        return None
 
     def encode(self, text: str) -> tuple[int, ...] | None:
         """
@@ -125,7 +127,7 @@ class TextProcessor:
         In case of corrupt input arguments, None is returned.
         In case any of methods used return None, None is returned.
         """
-        if not isinstance(text, str):
+        if not(isinstance(text, str) and text):
             return None
 
         tokens = self._tokenize(text)
@@ -151,10 +153,7 @@ class TextProcessor:
         In case of corrupt input arguments or invalid argument length,
         an element is not added to storage
         """
-        if not(
-            isinstance(element, str)
-            and len(element) == 1
-        ):
+        if not(isinstance(element, str) and len(element) == 1):
             return None
 
         if element not in self._storage:
@@ -363,6 +362,12 @@ class NGramLanguageModel:
         In case of corrupt input arguments or methods used return None,
         False is returned
         """
+        if not(
+            (isinstance(self._encoded_corpus, tuple) and self._encoded_corpus)
+            and all(isinstance(identifier, int) for identifier in self._encoded_corpus)
+        ):
+            return None
+
         n_grams = self._extract_n_grams(self._encoded_corpus)
         if n_grams is None:
             return False
