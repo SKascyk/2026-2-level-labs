@@ -46,8 +46,7 @@ class TextProcessor:
         if not isinstance(text, str):
             return None
 
-        end_of_word_token = self.get_end_of_word_token()
-        if not isinstance(end_of_word_token, str):
+        if not isinstance(self._end_of_word_token, str):
             return None
 
         preprocessed_text = "".join(
@@ -62,7 +61,7 @@ class TextProcessor:
         for word in preprocessed_text:
             tokens.extend(sym for sym in word)
             if not(word is preprocessed_text[-1] and text[-1].isalpha()):
-                tokens.append(end_of_word_token)
+                tokens.append(self._end_of_word_token)
         return tuple(tokens)
 
     def get_id(self, element: str) -> int | None:
@@ -133,10 +132,9 @@ class TextProcessor:
         if tokens is None:
             return None
 
-        for token in tokens:
-            self._put(token)
         encoded_corpus = []
         for token in tokens:
+            self._put(token)
             identifier = self.get_id(token)
             if identifier is None:
                 return None
@@ -244,12 +242,11 @@ class TextProcessor:
         ):
             return None
 
-        end_of_word_token = self.get_end_of_word_token()
-        if not isinstance(end_of_word_token, str):
+        if not isinstance(self._end_of_word_token, str):
             return None
 
         postprocessed_text = "".join(decoded_corpus).replace(
-            end_of_word_token,
+            self._end_of_word_token,
             " ",
         ).capitalize().strip()
         return postprocessed_text + "."
@@ -395,15 +392,14 @@ class NGramLanguageModel:
         ):
             return None
 
-        n_gram_size = self.get_n_gram_size()
-        if not isinstance(n_gram_size, int):
+        if not isinstance(self.__n_gram_size, int):
             return None
-        if len(sequence) < n_gram_size - 1:
+        if len(sequence) < self.__n_gram_size - 1:
             return None
 
         candidates = {}
         for n_gram in self._n_gram_frequencies:
-            if n_gram[:-1] == sequence[len(sequence) - n_gram_size + 1:]:
+            if n_gram[:-1] == sequence[len(sequence) - self.__n_gram_size + 1:]:
                 candidates[n_gram[-1]] = self._n_gram_frequencies[n_gram]
         return candidates
 
@@ -427,13 +423,12 @@ class NGramLanguageModel:
         ):
             return None
 
-        n_gram_size = self.get_n_gram_size()
-        if not isinstance(n_gram_size, int):
+        if not isinstance(self.__n_gram_size, int):
             return None
 
         n_grams = []
-        for ind in range(len(encoded_corpus) - n_gram_size + 1):
-            n_grams.append(encoded_corpus[ind:ind + n_gram_size])
+        for ind in range(len(encoded_corpus) - self.__n_gram_size + 1):
+            n_grams.append(encoded_corpus[ind:ind + self.__n_gram_size])
         return tuple(n_grams)
 
 
