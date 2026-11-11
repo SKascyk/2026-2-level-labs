@@ -390,10 +390,19 @@ class NGramLanguageModel:
         if n_grams is None:
             return False
 
-        n_grams_cut = tuple(n_gram[:-1] for n_gram in n_grams)
+        freq_dict = {}
         for n_gram in n_grams:
+            freq_dict[n_gram] = freq_dict.get(n_gram, 0) + 1
+
+        n_grams_cut = tuple(n_gram[:-1] for n_gram in n_grams)
+
+        freq_dict_cut = {}
+        for n_gram_cut in n_grams_cut:
+            freq_dict_cut[n_gram_cut] = freq_dict_cut.get(n_gram_cut, 0) + 1
+
+        for n_gram, n_gram_cut in zip(n_grams, n_grams_cut):
             if n_gram not in self._n_gram_frequencies:
-                frequency = n_grams.count(n_gram) / n_grams_cut.count(n_gram[:-1])
+                frequency = freq_dict[n_gram] / freq_dict_cut[n_gram_cut]
                 self._n_gram_frequencies[n_gram] = frequency
         return True
 
@@ -472,6 +481,8 @@ class GreedyTextGenerator:
             language_model (NGramLanguageModel): A language model to use for text generation
             text_processor (TextProcessor): A TextProcessor instance to handle text processing
         """
+        self._model = language_model
+        self._text_processor = text_processor
 
     def run(self, prompt: str, seq_len: int) -> str | None:
         """
@@ -487,6 +498,26 @@ class GreedyTextGenerator:
         In case of corrupt input arguments or methods used return None,
         None is returned
         """
+        if not (
+            (isinstance(prompt, str) and prompt)
+            and (isinstance(seq_len, int) and seq_len > 0)
+        ):
+            return None
+
+        encoded_prompt = self._text_processor.encode(prompt)
+        if encoded_prompt is None:
+            return None
+
+        if not isinstance(self._model.get_n_gram_size(), int):
+            return None
+
+        for _ in range(seq_len):
+            candidates = self._model.generate_next_token(encoded_prompt)
+            if candidates is None or not candidates:
+                break
+            next_identifier = max(candidates.items(), key=lambda item: (item[1], item[0]))[0]
+            encoded_prompt += (next_identifier,)
+        return self._text_processor.decode(encoded_prompt)
 
 
 class BeamSearcher:
