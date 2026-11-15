@@ -27,6 +27,8 @@ def main() -> None:
 
     text_processor = TextProcessor("_")
     encoded_text = text_processor.encode(text)
+    if encoded_text is None:
+        return None
     decoded_text = text_processor.decode(encoded_text)
     assert decoded_text
     print(decoded_text)
@@ -45,8 +47,13 @@ def main() -> None:
     print(generated_text)
 
     reader = NGramLanguageModelReader("./lab_3_generate_by_ngrams/assets/en_own.json", "_")
-    sym_models = reader.load(2), reader.load(3), reader.load(4)
-    backoff = BackOffGenerator(sym_models, reader.get_text_processor())
+    sym_models = []
+    for n_gram_size in range(2, 5):
+        sym_model = reader.load(n_gram_size)
+        if sym_model is None:
+            return None
+        sym_models.append(sym_model)
+    backoff = BackOffGenerator(tuple(sym_models), reader.get_text_processor())
     generated_text = backoff.run("Vernon", 100)
     result = generated_text
     assert result
@@ -62,7 +69,7 @@ def main() -> None:
         word_models[n_gram_size] = word_model
     greedy_generator = GreedyTextGenerator(word_models[4], word_processor)
     beam_generator = BeamSearchTextGenerator(word_models[4], word_processor, 3)
-    backoff = BackOffGenerator(word_models.values(), word_processor)
+    backoff = BackOffGenerator(tuple(word_models.values()), word_processor)
     for generator in (greedy_generator, beam_generator, backoff):
         print(generator.run(prompt, 12))
     print(GreedyTextGenerator(language_model, text_processor).run(prompt, 60))
