@@ -8,6 +8,7 @@ Beam-search and natural language generation evaluation
 from json import load
 from math import log
 
+
 class TextProcessor:
     """
     Handle text tokenization, encoding and decoding.
@@ -193,7 +194,7 @@ class TextProcessor:
         Args:
             content (dict): ngrams from external JSON
         """
-        if not(isinstance(content, dict)):
+        if not isinstance(content, dict):
             return None
 
         frequencies = content.get("freq")
@@ -404,6 +405,7 @@ class NGramLanguageModel:
             return None
 
         self._n_gram_frequencies = frequencies
+        return None
 
     def build(self) -> bool:
         """
