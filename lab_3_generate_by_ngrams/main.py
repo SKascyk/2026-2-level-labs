@@ -155,12 +155,12 @@ class TextProcessor:
         In case of corrupt input arguments or invalid argument length,
         an element is not added to storage
         """
-        if not(isinstance(element, str) and len(element) == 1):
-            return None
-
-        if element not in self._storage:
+        if (
+            isinstance(element, str)
+            and len(element) == 1
+            and element not in self._storage
+        ):
             self._storage[element] = len(self._storage)
-        return True
 
     def decode(self, encoded_corpus: tuple[int, ...]) -> str | None:
         """
@@ -185,7 +185,9 @@ class TextProcessor:
             return None
 
         tokens = self._decode(encoded_corpus)
-        return self._postprocess_decoded_text(tokens)
+        if tokens is not None:
+            return self._postprocess_decoded_text(tokens)
+        return None
 
     def fill_from_ngrams(self, content: dict) -> None:
         """
@@ -208,7 +210,7 @@ class TextProcessor:
             n_gram_by_sym = (sym for sym in n_gram.lower() if sym.isalpha())
             for sym in n_gram_by_sym:
                 self._put(sym)
-        return True
+        return None
 
     def _decode(self, corpus: tuple[int, ...]) -> tuple[str, ...] | None:
         """
@@ -318,12 +320,12 @@ class WordProcessor(TextProcessor):
 
         In case of corrupt input arguments, an element is not added to storage
         """
-        if not (isinstance(element, str) and element):
-            return None
-
-        if element not in self._storage:
+        if (
+            isinstance(element, str)
+            and element
+            and element not in self._storage
+        ):
             self._storage[element] = len(self._storage)
-        return True
 
     def _postprocess_decoded_text(self, decoded_corpus: tuple[str, ...]) -> str | None:
         """
