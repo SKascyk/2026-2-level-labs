@@ -73,6 +73,7 @@ def main() -> None:
     for generator in (greedy_generator, beam_generator, backoff):
         print(generator.run(prompt, 12))
     print(GreedyTextGenerator(language_model, text_processor).run(prompt, 60))
+    return None
 
 if __name__ == "__main__":
     main()
