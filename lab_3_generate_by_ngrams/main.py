@@ -5,8 +5,6 @@ Beam-search and natural language generation evaluation
 """
 
 # pylint:disable=too-few-public-methods
-from json import load
-from math import log
 
 import json
 import math
